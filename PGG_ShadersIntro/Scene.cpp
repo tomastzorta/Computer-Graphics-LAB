@@ -119,6 +119,7 @@ void Scene::Draw()
 			glUniform3f( _shaderEmissiveColLocation, 1.0f, 1.0f, 1.0f );
 			// Set specular colour 
 			glUniform3fv(_shaderSpecularColLocation, 1, glm::value_ptr(_cubeSpecularColour));
+			glUniform1f(_shaderCubeShininessLocation, _cubeShininess);
 				_cubeModel.Draw( );
 		
 
@@ -305,6 +306,7 @@ void Scene::BuildShaders()
 	
 	_shaderDiffuseColLocation = glGetUniformLocation( _shaderProgram, "diffuseColour" );
 	_shaderSpecularColLocation = glGetUniformLocation(_shaderProgram, "specularColour");
+	_shaderCubeShininessLocation = glGetUniformLocation(_shaderProgram, "shininess");
 	_shaderEmissiveColLocation = glGetUniformLocation( _shaderProgram, "emissiveColour" );
 	_shaderWSLightPosLocation = glGetUniformLocation( _shaderProgram, "worldSpaceLightPos" );
 }

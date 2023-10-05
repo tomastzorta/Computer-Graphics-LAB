@@ -45,6 +45,9 @@ public:
 	void SetCubeAngle(float value) { _cube1Angle = value; }
 	float GetCubeAngle() { return _cube1Angle; }
 
+	void SetCubeShininess(float value) {_cubeShininess = value;}
+	float GetCubeShininess() { return _cubeShininess; }
+
 
 protected:
 
@@ -66,6 +69,7 @@ protected:
 	float _cube1Angle;
 	float _cube2Angle;
 	float _cameraAngleX, _cameraAngleY;
+	float _cubeShininess = 1.0f;
 
 
 	// TODO: Exercise: extract all shader code and put it in its own class
@@ -78,7 +82,7 @@ protected:
 	int _shaderViewMatLocation;
 	int _shaderProjMatLocation;
 
-	int _shaderDiffuseColLocation, _shaderEmissiveColLocation, _shaderSpecularColLocation;
+	int _shaderDiffuseColLocation, _shaderEmissiveColLocation, _shaderSpecularColLocation, _shaderCubeShininessLocation;
 	int _shaderWSLightPosLocation;
 
 	// Utility functions to help us with building our shaders
@@ -86,7 +90,7 @@ protected:
 	void BuildShaders();
 
 	glm::vec3 _cubeDiffuseColour;
-	glm::vec3 _cubeSpecularColour;
+	glm::vec3 _cubeSpecularColour = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	// Bools for turning animations on and off 
 	bool _animateCentreCube, _animateLight;

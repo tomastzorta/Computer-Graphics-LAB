@@ -339,6 +339,10 @@ int main(int argc, char *argv[])
 			ImGui::SliderFloat("Light Angle", &lightAngle, 0.0f, 2.0f*3.141592653589793238462643383 );
 			myScene.SetLightAngle(lightAngle);
 
+			float cubeShininess = myScene.GetCubeShininess();
+			ImGui::SliderFloat("Cube Shininess", &cubeShininess, 1.0f, 50.0f);
+			myScene.SetCubeShininess(cubeShininess);
+
 			//add specular colour
 			glm::vec3 currentCubeSpecularCol = myScene.GetCubeSpecularColour();
 			ImGui::ColorEdit3("Specular Colour", &(currentCubeSpecularCol[0]));
