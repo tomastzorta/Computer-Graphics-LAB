@@ -1,0 +1,8 @@
+﻿  Main.cpp
+C:\Users\s5216712\Downloads\GCP_ShadersLab_v3\PGG_ShadersIntro\Main.cpp(339,92): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\s5216712\Downloads\GCP_ShadersLab_v3\PGG_ShadersIntro\Main.cpp(354,91): warning C4305: 'argument': truncation from 'double' to 'float'
+  Scene.cpp
+C:\Users\s5216712\Downloads\GCP_ShadersLab_v3\PGG_ShadersIntro\Scene.cpp(65,49): warning C4305: '-=': truncation from 'double' to 'float'
+C:\Users\s5216712\Downloads\GCP_ShadersLab_v3\PGG_ShadersIntro\Scene.cpp(74,49): warning C4305: '-=': truncation from 'double' to 'float'
+  Generating Code...
+  PGG_ShadersIntro.vcxproj -> C:\Users\s5216712\Downloads\GCP_ShadersLab_v3\Debug\PGG_ShadersIntro.exe
