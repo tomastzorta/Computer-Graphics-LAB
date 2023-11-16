@@ -1,3 +1,4 @@
+// This code defines an OpenGL library for generating and linking GLEW, including a programming error message to the console. It also includes variables that can be used in various libraries such as glew's features or use it with glue-based programs.
 
 // This is the main SDL include file
 #include <SDL/SDL.h>
@@ -357,8 +358,6 @@ int main(int argc, char *argv[])
 			float cubeAngle = myScene.GetCubeAngle();
 			ImGui::SliderFloat("Cube Angle", &cubeAngle, 0.0f, 2.0f * 3.141592653589793238462643383);
 			myScene.SetCubeAngle(cubeAngle);
-
-			
 			
 			//add shininess
 

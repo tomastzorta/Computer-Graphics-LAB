@@ -163,12 +163,15 @@ bool Scene::CheckShaderCompiled( GLint shader )
 
 void Scene::BuildShaders()
 {
-	//TODO: fix this
-	std::string vertFilename("vertShader.txt");
-	std::string fragFilename("FragShader.txt"); //originally fragShader.txt
+	//Phong
+	//std::string vertFilename("Shaders/Phong/vertShader.txt");
+	//std::string fragFilename("Shaders/Phong/fragShader.txt");
 
+	//PBR
+	std::string vertFilename("Shaders/PBR/PBR_vertShader.vert");
+	std::string fragFilename("Shaders/PBR/PBR_fragShader.frag");
 
-
+	
 	std::ifstream vertFile( vertFilename );
 	char *vShaderText = NULL;
 
