@@ -30,8 +30,6 @@ Scene::Scene()
 
 	BuildShaders();
 	
-
-	
 	//_modelMatrixCube1;
 	_modelMatrixCube2 = glm::scale(glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,0.0f)),glm::vec3(0.1f,0.1f,0.1f));
 	_modelMatrixCube3 = glm::scale(glm::translate(glm::mat4(1.0f),glm::vec3(0.0f,-1.0f,0.0f)),glm::vec3(2.0f,0.1f,2.0f));
@@ -164,12 +162,8 @@ bool Scene::CheckShaderCompiled( GLint shader )
 void Scene::BuildShaders()
 {
 	//Phong
-	//std::string vertFilename("Shaders/Phong/vertShader.txt");
-	//std::string fragFilename("Shaders/Phong/fragShader.txt");
-
-	//PBR
-	std::string vertFilename("Shaders/PBR/PBR_vertShader.vert");
-	std::string fragFilename("Shaders/PBR/PBR_fragShader.frag");
+	std::string vertFilename("Shaders/Phong/vertShader.vert");
+	std::string fragFilename("Shaders/Phong/fragShader.frag");
 
 	
 	std::ifstream vertFile( vertFilename );
