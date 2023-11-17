@@ -10,9 +10,9 @@ uniform float metallic;
 uniform float roughness;
 uniform float ao;  // Ambient occlusion
 
-// Lights properties
-uniform vec3 lightPositions[4];
-uniform vec3 lightColors[4];
+// Light properties
+uniform vec3 lightPosition; // Assuming cube 1's position
+uniform vec3 lightColor;    // Assuming cube 1's color
 
 uniform vec3 camPos;  // Camera position
 
@@ -62,42 +62,35 @@ void main()
 {
     vec3 N = normalize(Normal);
     vec3 V = normalize(camPos - WorldPos);
-    vec3 R = reflect(-V, N);
 
     vec3 F0 = vec3(0.04);
     F0 = mix(F0, albedo, metallic);
 
     vec3 Lo = vec3(0.0);
-    for(int i = 0; i < 4; ++i)
-    {
-        // Calculate per-light radiance
-        vec3 L = normalize(lightPositions[i] - WorldPos);
-        vec3 H = normalize(V + L);
-        float distance = length(lightPositions[i] - WorldPos);
-        float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = lightColors[i] * attenuation;
 
-        // Cook-Torrance BRDF
-        float NDF = DistributionGGX(N, H, roughness);
-        float G = GeometrySmith(N, V, L, roughness);
-        vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
+    // Calculate per-light radiance for the single light source
+    vec3 L = normalize(lightPosition - WorldPos);
+    vec3 H = normalize(V + L);
+    float distance = length(lightPosition - WorldPos);
+    float attenuation = 1.0 / (distance * distance);
+    vec3 radiance = lightColor * attenuation;
 
-        vec3 numerator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
-        vec3 specular = numerator / max(denominator, 0.001);
+    // Cook-Torrance BRDF
+    float NDF = DistributionGGX(N, H, roughness);
+    float G = GeometrySmith(N, V, L, roughness);
+    vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
 
-        vec3 kS = F;
-        vec3 kD = vec3(1.0) - kS;
-        kD *= 1.0 - metallic;
+    vec3 numerator = NDF * G * F;
+    float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
+    vec3 specular = numerator / max(denominator, 0.001);
 
-        vec3 numerator = NDF * G * F;
-        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-        vec3 specular = numerator / denominator;
+    vec3 kS = F;
+    vec3 kD = vec3(1.0) - kS;
+    kD *= 1.0 - metallic;
 
-        // Add to outgoing radiance Lo
-        float NdotL = max(dot(N, L), 0.0);
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
-    }
+    // Add to outgoing radiance Lo
+    float NdotL = max(dot(N, L), 0.0);
+    Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 
     vec3 ambient = vec3(0.03) * albedo * ao;
     vec3 color = ambient + Lo;

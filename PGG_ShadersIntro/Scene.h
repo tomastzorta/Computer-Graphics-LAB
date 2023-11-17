@@ -85,6 +85,15 @@ protected:
 	int _shaderDiffuseColLocation, _shaderEmissiveColLocation, _shaderSpecularColLocation, _shaderCubeShininessLocation;
 	int _shaderWSLightPosLocation;
 
+	//PBR
+	int _shaderAlbedoLocation;
+	int _shaderMetallicLocation;
+	int _shaderRoughnessLocation;
+	int _shaderAoLocation;
+	int _shaderLightPosLocation;
+	int _shadeLightColLocation;
+	int _shaderCamPosLocation;
+
 	// Utility functions to help us with building our shaders
 	bool CheckShaderCompiled( GLint shader );
 	void BuildShaders();
