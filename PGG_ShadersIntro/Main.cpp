@@ -366,6 +366,18 @@ int main(int argc, char *argv[])
 
 			// We've finished adding stuff to the window
 			ImGui::End();
+
+			ImGui::Begin("Shader Controls");
+			if (ImGui::Button("Use PBR"))
+			{
+				myScene.SetCurrentShader("PBR");
+			}
+			if (ImGui::Button("Use Phong"))
+			{
+				myScene.SetCurrentShader("Phong");
+			}
+			ImGui::End();
+			
 		}
 
 		// Render GUI to screen

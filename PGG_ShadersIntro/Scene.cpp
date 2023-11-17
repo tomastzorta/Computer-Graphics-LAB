@@ -9,32 +9,30 @@
 
 Scene::Scene()
 {
+	_currentShader = "PBR";
+	
+	Startup();
+}
+
+Scene::~Scene()
+{
+}
+
+void Scene::Startup()
+{
+	_shaderManager.LoadShader("PBR", "Shaders/PBR/PBR_vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
+	_shaderManager.LoadShader("Phong", "Shaders/Phong/vertShader.vert", "Shaders/Phong/fragShader.frag");
+	
 	_cube1Angle = 0.0f;
 	_cube2Angle = 0.0f;
 
 	_cameraAngleX = 0.0f, _cameraAngleY = 0.0f;
-
-
-	_shaderModelMatLocation = 0;
-	_shaderViewMatLocation = 0;
-	_shaderProjMatLocation = 0;
-
-	_shaderDiffuseColLocation = 0;
-	_shaderEmissiveColLocation = 0;
-	_shaderWSLightPosLocation = 0;
-
-	_cubeDiffuseColour = glm::vec3(0.8f, 0.2f, 0.1f);
+	
+	_cubeDiffuseColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	_cubeSpecularColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	_cubeShininess = 1.0f;
 	_animateCentreCube = true;
 	_animateLight = true;
-
-	//PBR
-	_shaderAlbedoLocation = 0;
-	_shaderMetallicLocation = 0;
-	_shaderRoughnessLocation = 0;
-	_shaderAoLocation = 0;
-
-
-	BuildShaders();
 	
 	//_modelMatrixCube1;
 	_modelMatrixCube2 = glm::scale(glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,0.0f)),glm::vec3(0.1f,0.1f,0.1f));
@@ -48,17 +46,12 @@ Scene::Scene()
 	// Set up a projection matrix
 	_projMatrix = glm::perspective(45.0f, 1.0f, 0.1f, 100.0f);
 
-
+	
 }
 
-Scene::~Scene()
-{
-}
 
 void Scene::Update( float deltaTs )
 {
-
-
 	if (_animateCentreCube)
 	{
 		_cube1Angle += deltaTs * 0.5f;
@@ -79,94 +72,173 @@ void Scene::Update( float deltaTs )
 		}
 	}
 
+	AnimationMatrices();
+}
 
-
+void Scene::AnimationMatrices()
+{
 	// Update the model matrix with the rotation of the object
 	_modelMatrixCube1 = glm::rotate( glm::mat4(1.0f), _cube1Angle, glm::vec3(0,1,0) );
 	_modelMatrixCube2 = glm::rotate(glm::mat4(1.0f), _cube2Angle, glm::vec3(0, 1, 0));
 	_modelMatrixCube2 = glm::translate(_modelMatrixCube2, glm::vec3(1, 0, 0));
 	_modelMatrixCube2 = glm::scale(_modelMatrixCube2, glm::vec3(0.1f, 0.1f, 0.1f));
-
-
 }
+
+void Scene::DrawCubePBR(const glm::mat4& a_modelMatrix, const glm::vec3& a_colour, 
+						bool a_isLightSource, float a_metallic, float a_roughness, float a_ao)
+{
+	_shaderManager.UseShader("PBR");
+
+	GLuint modelMatLocation = _shaderManager.GetUniform("PBR", "modelMat");
+	glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, glm::value_ptr(a_modelMatrix));
+
+	GLuint albedoLocation = _shaderManager.GetUniform("PBR", "albedo");
+	GLuint metallicLocation = _shaderManager.GetUniform("PBR", "metallic");
+	GLuint roughnessLocation = _shaderManager.GetUniform("PBR", "roughness");
+	GLuint aoLocation = _shaderManager.GetUniform("PBR", "ao");
+
+	glUniform3fv(albedoLocation, 1, glm::value_ptr(a_colour));
+
+	if (!a_isLightSource)
+	{
+		glUniform1f(metallicLocation, a_metallic);
+		glUniform1f(roughnessLocation, a_roughness);
+		glUniform1f(aoLocation, a_ao);
+	}
+	else
+	{
+		// For light sources in PBR
+		glUniform1f(metallicLocation, 1.0f);
+		glUniform1f(roughnessLocation, 0.0f);
+		glUniform1f(aoLocation, 1.0f);
+	}
+
+	_cubeModel.Draw();
+}
+
+void Scene::DrawCubePhong(const glm::mat4& a_modelMatrix, const glm::vec3& a_colour, 
+						  bool a_isLightSource, const glm::vec3& a_diffuse, 
+						  const glm::vec3& a_specular, float a_shininess, 
+						  const glm::vec3& a_worldLightPosition, const glm::vec3& a_emissiveColour)
+{
+	_shaderManager.UseShader("Phong");
+
+	GLuint modelMatLocation = _shaderManager.GetUniform("Phong", "modelMat");
+	glUniformMatrix4fv(modelMatLocation, 1, GL_FALSE, glm::value_ptr(a_modelMatrix));
+
+	GLuint diffuseLocation = _shaderManager.GetUniform("Phong", "diffuseColour");
+	GLuint specularLocation = _shaderManager.GetUniform("Phong", "specularColour");
+	GLuint shininessLocation = _shaderManager.GetUniform("Phong", "shininess");
+	GLuint lightPositionLocation = _shaderManager.GetUniform("Phong", "lightPosition");
+	GLuint emissiveLocation = _shaderManager.GetUniform("Phong", "emissiveColour");
+
+	glUniform3fv(diffuseLocation, 1, glm::value_ptr(a_diffuse));
+	glUniform3fv(specularLocation, 1, glm::value_ptr(a_specular));
+	glUniform1f(shininessLocation, a_shininess);
+	glUniform3fv(lightPositionLocation, 1, glm::value_ptr(a_worldLightPosition));
+	glUniform3fv(emissiveLocation, 1, glm::value_ptr(a_emissiveColour));
+
+	if (a_isLightSource)
+	{
+		glUniform3fv(emissiveLocation, 1, glm::value_ptr(a_colour));
+	}
+	else
+	{
+		glUniform3f(emissiveLocation, 0.0f, 0.0f, 0.0f);
+	}
+
+	_cubeModel.Draw();
+}
+
+
 
 void Scene::Draw()
 {
-		// Activate the shader program
-	glUseProgram( _shaderProgram );
+	_shaderManager.UseShader(_currentShader);
 
-		// We use the small cube's model matrix to transform the light position
-		// This means the light will have the position of the small cube
-		//glUniform4fv( _shaderWSLightPosLocation, 1, glm::value_ptr(_modelMatrixCube2 * glm::vec4(0,0,0,1)) );
+	// Fetch uniform locations from ShaderManager for the Phong shader
+	GLuint viewMatLocation = _shaderManager.GetUniform(_currentShader, "viewMat");
+	GLuint projMatLocation = _shaderManager.GetUniform(_currentShader, "projMat");
+	GLuint lightPositionLocation = _shaderManager.GetUniform(_currentShader, "lightPosition");
+	GLuint lightColourLocation = _shaderManager.GetUniform(_currentShader, "lightColor");
+	GLuint cameraPositionLocation = _shaderManager.GetUniform(_currentShader, "camPos");
 
-		// Send view and projection matrices to OpenGL
-		glUniformMatrix4fv(_shaderViewMatLocation, 1, GL_FALSE, glm::value_ptr(_viewMatrix) );
-		glUniformMatrix4fv(_shaderProjMatLocation, 1, GL_FALSE, glm::value_ptr(_projMatrix) );
+	// Set view and projection matrices
+	glUniformMatrix4fv(viewMatLocation, 1, GL_FALSE, glm::value_ptr(_viewMatrix));
+	glUniformMatrix4fv(projMatLocation, 1, GL_FALSE, glm::value_ptr(_projMatrix));
 
-			//camera position
-			glm::vec3 camPos = glm::vec3(glm::inverse(_viewMatrix)[3]);
-			glUniform3fv(_shaderCamPosLocation, 1, glm::value_ptr(camPos));
+	// Set light position and color for Phong shader
+	glm::vec3 lightPosition = glm::vec3(_modelMatrixCube2 * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	glm::vec3 lightColour = glm::vec3(5.0f); // Bright white light
+	glUniform3fv(lightPositionLocation, 1, glm::value_ptr(lightPosition));
+	glUniform3fv(lightColourLocation, 1, glm::value_ptr(lightColour));
 
-			/* Draw Cube 1 PBR - Standard Object */
-			glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube1));
-			glUniform3fv(_shaderAlbedoLocation, 1, glm::value_ptr(_cubeDiffuseColour)); // Variable color
-			glUniform1f(_shaderMetallicLocation, 0.5f); // Adjust metallic property
-			glUniform1f(_shaderRoughnessLocation, 0.2f); // Adjust roughness
-			glUniform1f(_shaderAoLocation, 0.5f);
-			_cubeModel.Draw();
+	// Set camera position for Phong shader
+	glm::vec3 camPos = glm::vec3(glm::inverse(_viewMatrix)[3]);
+	glUniform3fv(cameraPositionLocation, 1, glm::value_ptr(camPos));
+	
 
-			/* Draw Cube 2 PBR - Light Source */
-			glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube2));
-			glm::vec3 lightPosition = glm::vec3(_modelMatrixCube2 * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-			glUniform3fv(_shaderLightPosLocation, 1, glm::value_ptr(lightPosition));
-			glm::vec3 lightColour = glm::vec3(1.0f); // Bright white light
-			glUniform3fv(_shadeLightColLocation, 1, glm::value_ptr(lightColour));
-			_cubeModel.Draw();
+	/////////////////////////////////////// PBR ///////////////////////////////////////
+	if (_currentShader == "PBR")
+	{
+		/* Draw Cube 1 PBR - Standard Object */
+		DrawCubePBR(_modelMatrixCube1, _cubeDiffuseColour, false, 0.5f, 0.2f, 0.5f);
+
+		/* Draw Cube 2 PBR - Light Source */
+		DrawCubePBR(_modelMatrixCube2, lightColour, true, 0.0f, 0.0f, 0.0f);
+
+		/* Draw Cube 3 PBR - Floor */
+		DrawCubePBR(_modelMatrixCube3, glm::vec3(0.3f, 0.3f, 1.0f), false, 0.1f, 0.8f, 0.5f);
+	}
+	else if (_currentShader == "Phong")
+	{
+		/* Draw Cube 1 PHONG - Standard Object */
+		DrawCubePhong(_modelMatrixCube1, glm::vec3(0.0f, 0.0f, 0.0f), false, glm::vec3(0.8f, 0.1f, 0.1f), _cubeSpecularColour, _cubeShininess, lightPosition, glm::vec3(0.0f, 0.0f, 0.0f));
+
+		/* Draw Cube 2 PHONG - Light Source */
+		DrawCubePhong(_modelMatrixCube2, glm::vec3(1.0f, 1.0f, 1.0f), true, glm::vec3(0.0f, 0.0f, 0.0f), _cubeSpecularColour, _cubeShininess, lightPosition, glm::vec3(1.0f, 1.0f, 1.0f));
+
+		/* Draw Cube 3 PHONG - Floor */
+		DrawCubePhong(_modelMatrixCube3, glm::vec3(0.0f, 0.0f, 0.0f), false, glm::vec3(0.3f, 0.3f, 1.0f), _cubeSpecularColour, _cubeShininess, lightPosition, glm::vec3(0.0f, 0.0f, 0.0f));
 
 
-			/* Draw Cube 3 PBR - Floor */
-			glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube3));
-			glUniform3f(_shaderAlbedoLocation, 0.3f, 0.3f, 1.0f); // Blue color for the floor
-			glUniform1f(_shaderMetallicLocation, 0.1f); // Less metallic
-			glUniform1f(_shaderRoughnessLocation, 0.8f); // More roughness
-			glUniform1f(_shaderAoLocation, 0.5f);
-			_cubeModel.Draw();
-
-
-
+	}
+    
+	
+	
 	/////////////////////////////////////// PHONG ///////////////////////////////////////
-		// /* Draw Cube 1 */
-		//
-		// 	// Set emissive colour component for cube 1
-		// 	glUniform3f( _shaderEmissiveColLocation, 0.0f, 0.0f, 0.0f );
-		// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube1) );
-		// 	// Set diffuse colour for cube 1
-		// 	glUniform3fv( _shaderDiffuseColLocation, 1, glm::value_ptr(_cubeDiffuseColour) );
-		// 		_cubeModel.Draw( );
-		//
-		//
-		//
-		// /* Draw Cube 2 */
-		//
-		// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube2) );
-		// 	glUniform3f( _shaderDiffuseColLocation, 0.0f, 0.0f, 0.0f );
-		// 	// Set emissive colour component for cubes 2 to be bright so it looks like a light
-		// 	glUniform3f( _shaderEmissiveColLocation, 1.0f, 1.0f, 1.0f );
-		// 	// Set specular colour 
-		// 	glUniform3fv(_shaderSpecularColLocation, 1, glm::value_ptr(_cubeSpecularColour));
-		// 	glUniform1f(_shaderCubeShininessLocation, _cubeShininess);
-		// 		_cubeModel.Draw( );
-		//
-		//
-		//
-		// /* Draw Cube 3 */
-		//
-		// 	// Set emissive colour component for cubes 3 to be dark
-		// 	glUniform3f( _shaderEmissiveColLocation, 0.0f, 0.0f, 0.0f );
-		// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube3) );
-		// 	// Set diffuse colour for cube 3
-		// 	glUniform3f( _shaderDiffuseColLocation, 0.3f, 0.3f, 1.0f );
-		// 		_cubeModel.Draw( );
+	// /* Draw Cube 1 */
+	//
+	// 	// Set emissive colour component for cube 1
+	// 	glUniform3f( _shaderEmissiveColLocation, 0.0f, 0.0f, 0.0f );
+	// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube1) );
+	// 	// Set diffuse colour for cube 1
+	// 	glUniform3fv( _shaderDiffuseColLocation, 1, glm::value_ptr(_cubeDiffuseColour) );
+	// 		_cubeModel.Draw( );
+	//
+	//
+	//
+	// /* Draw Cube 2 */
+	//
+	// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube2) );
+	// 	glUniform3f( _shaderDiffuseColLocation, 0.0f, 0.0f, 0.0f );
+	// 	// Set emissive colour component for cubes 2 to be bright so it looks like a light
+	// 	glUniform3f( _shaderEmissiveColLocation, 1.0f, 1.0f, 1.0f );
+	// 	// Set specular colour 
+	// 	glUniform3fv(_shaderSpecularColLocation, 1, glm::value_ptr(_cubeSpecularColour));
+	// 	glUniform1f(_shaderCubeShininessLocation, _cubeShininess);
+	// 		_cubeModel.Draw( );
+	//
+	//
+	//
+	// /* Draw Cube 3 */
+	//
+	// 	// Set emissive colour component for cubes 3 to be dark
+	// 	glUniform3f( _shaderEmissiveColLocation, 0.0f, 0.0f, 0.0f );
+	// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube3) );
+	// 	// Set diffuse colour for cube 3
+	// 	glUniform3f( _shaderDiffuseColLocation, 0.3f, 0.3f, 1.0f );
+	// 		_cubeModel.Draw( );
 
 
 	// Technically we can do this, but it makes no real sense because we must always have a valid shader program to draw geometry
@@ -176,183 +248,3 @@ void Scene::Draw()
 
 
 
-bool Scene::CheckShaderCompiled( GLint shader )
-{
-	GLint compiled;
-	glGetShaderiv( shader, GL_COMPILE_STATUS, &compiled );
-	if ( !compiled )
-	{
-		GLsizei len;
-		glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &len );
-
-		// OpenGL will store an error message as a string that we can retrieve and print
-		GLchar* log = new GLchar[len+1];
-		glGetShaderInfoLog( shader, len, &len, log );
-		std::cerr << "ERROR: Shader compilation failed: " << log << std::endl;
-		delete [] log;
-
-		return false;
-	}
-	return true;
-}
-
-void Scene::BuildShaders()
-{
-	//Phong
-	//std::string vertFilename("Shaders/Phong/vertShader.vert");
-	//std::string fragFilename("Shaders/Phong/fragShader.frag");
-
-	//PBR
-	std::string vertFilename("Shaders/PBR/PBR_vertShader.vert");
-	std::string fragFilename("Shaders/PBR/PBR_fragShader.frag");
-
-	
-	std::ifstream vertFile( vertFilename );
-	char *vShaderText = NULL;
-
-	if( vertFile.is_open() )
-	{
-		// Find out how many characters are in the file
-		vertFile.seekg( 0, vertFile.end );
-		int length = (int)vertFile.tellg();
-		vertFile.seekg( 0, vertFile.beg );
-
-		// Create our buffer
-		vShaderText = new char[length];
-
-		// Transfer data from file to buffer
-		vertFile.read( vShaderText, length );
-
-		// Check it reached the end of the file
-		if( !vertFile.eof() )
-		{
-			vertFile.close();
-			std::cerr << "WARNING: could not read vertex shader from file: " << vertFilename << std::endl;
-			return;
-		}
-
-		// Find out how many characters were actually read
-		length = (int)vertFile.gcount();
-
-		// Needs to be NULL-terminated
-		vShaderText[length - 1] = 0;
-
-		vertFile.close();
-	}
-	else
-	{
-		std::cerr << "WARNING: could not open vertex shader from file: " << vertFilename << std::endl;
-		return;
-	}
-
-
-
-	std::ifstream fragFile( fragFilename );
-	char *fShaderText = NULL;
-
-	if( fragFile.is_open() )
-	{
-		// Find out how many characters are in the file
-		fragFile.seekg( 0, fragFile.end );
-		int length = (int)fragFile.tellg();
-		fragFile.seekg( 0, fragFile.beg );
-
-		// Create our buffer
-		fShaderText = new char[length];
-
-		// Transfer data from file to buffer
-		fragFile.read( fShaderText, length );
-
-		// Check it reached the end of the file
-		if( !fragFile.eof() )
-		{
-			fragFile.close();
-			std::cerr << "WARNING: could not read fragment shader from file: " << fragFilename << std::endl;
-			return;
-		}
-
-		// Find out how many characters were actually read
-		length = (int)fragFile.gcount();
-
-		// Needs to be NULL-terminated
-		fShaderText[length - 1] = 0;
-
-		fragFile.close();
-	}
-	else
-	{
-		std::cerr << "WARNING: could not open fragment shader from file: " << fragFilename << std::endl;
-		return;
-	}
-	
-	// The 'program' stores the shaders
-	_shaderProgram = glCreateProgram();
-
-	// Create the vertex shader
-	GLuint vShader = glCreateShader( GL_VERTEX_SHADER );
-	// Give GL the source for it
-	glShaderSource( vShader, 1, &vShaderText, NULL );
-	// Compile the shader
-	glCompileShader( vShader );
-	// Check it compiled and give useful output if it didn't work!
-	if( !CheckShaderCompiled( vShader ) )
-	{
-		std::cerr<<"ERROR: failed to compile vertex shader"<<std::endl;
-		return;
-	}
-	// This links the shader to the program
-	glAttachShader( _shaderProgram, vShader );
-
-	// Same for the fragment shader
-	GLuint fShader = glCreateShader( GL_FRAGMENT_SHADER );
-	glShaderSource( fShader, 1, &fShaderText, NULL );
-	glCompileShader( fShader );
-	if( !CheckShaderCompiled( fShader ) )
-	{
-		std::cerr<<"ERROR: failed to compile fragment shader"<<std::endl;
-		return;
-	}
-	glAttachShader( _shaderProgram, fShader );
-
-	// This makes sure the vertex and fragment shaders connect together
-	glLinkProgram( _shaderProgram );
-	// Check this worked
-	GLint linked;
-	glGetProgramiv( _shaderProgram, GL_LINK_STATUS, &linked );
-	if ( !linked )
-	{
-		GLsizei len;
-		glGetProgramiv( _shaderProgram, GL_INFO_LOG_LENGTH, &len );
-
-		GLchar* log = new GLchar[len+1];
-		glGetProgramInfoLog( _shaderProgram, len, &len, log );
-		std::cerr << "ERROR: Shader linking failed: " << log << std::endl;
-		delete [] log;
-
-		return;
-	}
-
-
-	// We will define matrices which we will send to the shader
-	// To do this we need to retrieve the locations of the shader's matrix uniform variables
-	glUseProgram( _shaderProgram );
-	_shaderModelMatLocation = glGetUniformLocation( _shaderProgram, "modelMat" );
-	_shaderViewMatLocation = glGetUniformLocation( _shaderProgram, "viewMat" );
-	_shaderProjMatLocation = glGetUniformLocation( _shaderProgram, "projMat" );
-
-	//Phong Properties
-	//_shaderDiffuseColLocation = glGetUniformLocation( _shaderProgram, "diffuseColour" );
-	//_shaderSpecularColLocation = glGetUniformLocation(_shaderProgram, "specularColour");
-	//_shaderCubeShininessLocation = glGetUniformLocation(_shaderProgram, "shininess");
-	//_shaderEmissiveColLocation = glGetUniformLocation( _shaderProgram, "emissiveColour" );
-	//_shaderWSLightPosLocation = glGetUniformLocation( _shaderProgram, "worldSpaceLightPos" );
-
-	//PBR Properties
-	_shaderAlbedoLocation = glGetUniformLocation(_shaderProgram, "albedo");
-	_shaderMetallicLocation = glGetUniformLocation(_shaderProgram, "metallic");
-	_shaderRoughnessLocation = glGetUniformLocation(_shaderProgram, "roughness");
-	_shaderAoLocation = glGetUniformLocation(_shaderProgram, "ao");
-	_shaderLightPosLocation = glGetUniformLocation(_shaderProgram, "lightPosition");
-	_shadeLightColLocation = glGetUniformLocation(_shaderProgram, "lightColor");
-	_shaderCamPosLocation = glGetUniformLocation(_shaderProgram, "camPos");
-}

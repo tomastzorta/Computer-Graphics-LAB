@@ -1,5 +1,6 @@
 
 #include "Cube.h"
+#include "ShaderManager.h"
 
 // The GLM library contains vector and matrix functions and classes for us to use
 // They are designed to easily work with OpenGL!
@@ -16,15 +17,10 @@ public:
 	Scene();
 	~Scene();
 
-	void ChangeCameraAngleX( float value ) { _cameraAngleX += value; }
-	void ChangeCameraAngleY( float value ) { _cameraAngleY += value; }
-
 	void Update( float deltaTs );
-
-
 	void Draw();
-
-
+	void Startup();
+	
 	// Getters and Setters for various scene object variables
 	// These are very specific to the scene, your design should move them out of here
 	void SetCubeDiffuseColour(glm::vec3 value) { _cubeDiffuseColour = value; }
@@ -48,6 +44,8 @@ public:
 	void SetCubeShininess(float value) {_cubeShininess = value;}
 	float GetCubeShininess() { return _cubeShininess; }
 
+	void SetCurrentShader(std::string value) { _currentShader = value; }
+
 
 protected:
 
@@ -69,39 +67,27 @@ protected:
 	float _cube1Angle;
 	float _cube2Angle;
 	float _cameraAngleX, _cameraAngleY;
-	float _cubeShininess = 1.0f;
-
-
-	// TODO: Exercise: extract all shader code and put it in its own class
-
-	GLuint _shaderProgram;
-
-	// These are for storing the Uniform locations of shader variables
-	// We need these so we can send Uniform data to them
-	int _shaderModelMatLocation;
-	int _shaderViewMatLocation;
-	int _shaderProjMatLocation;
-
-	int _shaderDiffuseColLocation, _shaderEmissiveColLocation, _shaderSpecularColLocation, _shaderCubeShininessLocation;
-	int _shaderWSLightPosLocation;
-
-	//PBR
-	int _shaderAlbedoLocation;
-	int _shaderMetallicLocation;
-	int _shaderRoughnessLocation;
-	int _shaderAoLocation;
-	int _shaderLightPosLocation;
-	int _shadeLightColLocation;
-	int _shaderCamPosLocation;
-
-	// Utility functions to help us with building our shaders
-	bool CheckShaderCompiled( GLint shader );
-	void BuildShaders();
-
+	float _cubeShininess;
+	
 	glm::vec3 _cubeDiffuseColour;
-	glm::vec3 _cubeSpecularColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 _cubeSpecularColour;
 
 	// Bools for turning animations on and off 
 	bool _animateCentreCube, _animateLight;
 
+	ShaderManager _shaderManager;
+
+	void AnimationMatrices();
+	
+	void Scene::DrawCubePBR(const glm::mat4& a_modelMatrix, const glm::vec3& a_colour, 
+							bool a_isLightSource, float a_metallic, float a_roughness, float a_ao);
+
+	void Scene::DrawCubePhong(const glm::mat4& a_modelMatrix, const glm::vec3& a_colour, 
+							  bool a_isLightSource, const glm::vec3& a_diffuse, 
+							  const glm::vec3& a_specular, float a_shininess, 
+							  const glm::vec3& a_worldLightPosition, const glm::vec3& a_emissiveColour);
+
+
+private:
+	std::string _currentShader;
 };

@@ -159,6 +159,7 @@
     <ClCompile Include="glew.c" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\SDKs\IMGUI\imconfig.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="Cube.h" />
     <ClInclude Include="glew.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="wglew.h" />
   </ItemGroup>
   <ItemGroup>
