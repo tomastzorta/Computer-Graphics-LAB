@@ -20,8 +20,8 @@ Scene::~Scene()
 
 void Scene::Startup()
 {
-	_shaderManager.LoadShader("PBR", "Shaders/PBR/PBR_vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
-	_shaderManager.LoadShader("Phong", "Shaders/Phong/vertShader.vert", "Shaders/Phong/fragShader.frag");
+	_shaderManager.LoadShader("PBR", "Shaders/vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
+	_shaderManager.LoadShader("Phong", "Shaders/vertShader.vert", "Shaders/Phong/fragShader.frag");
 	
 	_cube1Angle = 0.0f;
 	_cube2Angle = 0.0f;
