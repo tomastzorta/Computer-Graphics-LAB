@@ -28,11 +28,14 @@ void Scene::Startup()
 
 	_cameraAngleX = 0.0f, _cameraAngleY = 0.0f;
 	
-	_cubeDiffuseColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	_cubeDiffuseColour = glm::vec3(1.0f, 0.0f, 0.0f);
 	_cubeSpecularColour = glm::vec3(1.0f, 1.0f, 1.0f);
 	_cubeShininess = 1.0f;
 	_animateCentreCube = true;
 	_animateLight = true;
+
+	_metallic = 0.9f;
+	_roughness = 0.1f;
 	
 	//_modelMatrixCube1;
 	_modelMatrixCube2 = glm::scale(glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,0.0f)),glm::vec3(0.1f,0.1f,0.1f));
