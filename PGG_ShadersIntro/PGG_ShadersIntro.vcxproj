@@ -179,11 +179,12 @@
     <ClInclude Include="wglew.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Shaders\PBR\PBR_vertShader.vert" />
     <Text Include="Shaders\Phong\fragShader.frag" />
-    <Text Include="Shaders\vertShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Shaders\PBR\PBR_fragShader.frag" />
+    <Content Include="Shaders\Phong\vertShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

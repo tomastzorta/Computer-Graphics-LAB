@@ -91,10 +91,12 @@ protected:
 	void Scene::DrawCubePBR(const glm::mat4& a_modelMatrix, const glm::vec3& a_colour, 
 							bool a_isLightSource, float a_metallic, float a_roughness, float a_ao);
 
-	void Scene::DrawCubePhong(const glm::mat4& a_modelMatrix, const glm::vec3& a_colour, 
-							  bool a_isLightSource, const glm::vec3& a_diffuse, 
-							  const glm::vec3& a_specular, float a_shininess, 
-							  const glm::vec3& a_worldLightPosition, const glm::vec3& a_emissiveColour);
+	void Scene::DrawCubePhong(const glm::mat4& a_modelMatrix, 
+						  const glm::vec3& a_diffuse, 
+						  const glm::vec3& a_specular, 
+						  float a_shininess, 
+						  const glm::vec3& a_emissive, 
+						  bool a_isLightSource);
 
 
 private:
