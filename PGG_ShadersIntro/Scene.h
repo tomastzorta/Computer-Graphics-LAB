@@ -46,6 +46,12 @@ public:
 
 	void SetCurrentShader(std::string value) { _currentShader = value; }
 
+	void SetMetallic(float value) { _metallic = value; }
+	float GetMetallic() { return _metallic; }
+
+	void SetRoughness(float value) { _roughness = value; }
+	float GetRoughness() { return _roughness; }
+
 
 protected:
 
@@ -68,6 +74,9 @@ protected:
 	float _cube2Angle;
 	float _cameraAngleX, _cameraAngleY;
 	float _cubeShininess;
+
+	float _metallic;
+	float _roughness;
 	
 	glm::vec3 _cubeDiffuseColour;
 	glm::vec3 _cubeSpecularColour;

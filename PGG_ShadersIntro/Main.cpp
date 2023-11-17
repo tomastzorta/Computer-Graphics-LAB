@@ -377,6 +377,15 @@ int main(int argc, char *argv[])
 				myScene.SetCurrentShader("Phong");
 			}
 			ImGui::End();
+
+			ImGui::Begin("PBR Controls");
+			float metallic = myScene.GetMetallic();
+			ImGui::SliderFloat("Metallic", &metallic, 0.0f, 1.0f);
+			myScene.SetMetallic(metallic);
+			float roughness = myScene.GetRoughness();
+			ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f);
+			myScene.SetRoughness(roughness);
+			ImGui::End();
 			
 		}
 

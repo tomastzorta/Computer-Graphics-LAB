@@ -182,7 +182,7 @@ void Scene::Draw()
 	if (_currentShader == "PBR")
 	{
 		/* Draw Cube 1 PBR - Standard Object */
-		DrawCubePBR(_modelMatrixCube1, _cubeDiffuseColour, false, 0.5f, 0.2f, 0.5f);
+		DrawCubePBR(_modelMatrixCube1, _cubeDiffuseColour, false, _metallic, _roughness, 0.5f);
 
 		/* Draw Cube 2 PBR - Light Source */
 		DrawCubePBR(_modelMatrixCube2, lightColour, true, 0.0f, 0.0f, 0.0f);
@@ -190,10 +190,11 @@ void Scene::Draw()
 		/* Draw Cube 3 PBR - Floor */
 		DrawCubePBR(_modelMatrixCube3, glm::vec3(0.3f, 0.3f, 1.0f), false, 0.1f, 0.8f, 0.5f);
 	}
+	/////////////////////////////////////// PHONG ///////////////////////////////////////
 	else if (_currentShader == "Phong")
 	{
 		/* Draw Cube 1 PHONG - Standard Object */
-		DrawCubePhong(_modelMatrixCube1, glm::vec3(0.0f, 0.0f, 0.0f), false, glm::vec3(0.8f, 0.1f, 0.1f), _cubeSpecularColour, _cubeShininess, lightPosition, glm::vec3(0.0f, 0.0f, 0.0f));
+		DrawCubePhong(_modelMatrixCube1, _cubeDiffuseColour, false, glm::vec3(0.8f, 0.1f, 0.1f), _cubeSpecularColour, _cubeShininess, lightPosition, glm::vec3(0.0f, 0.0f, 0.0f));
 
 		/* Draw Cube 2 PHONG - Light Source */
 		DrawCubePhong(_modelMatrixCube2, glm::vec3(1.0f, 1.0f, 1.0f), true, glm::vec3(0.0f, 0.0f, 0.0f), _cubeSpecularColour, _cubeShininess, lightPosition, glm::vec3(1.0f, 1.0f, 1.0f));
@@ -203,43 +204,6 @@ void Scene::Draw()
 
 
 	}
-    
-	
-	
-	/////////////////////////////////////// PHONG ///////////////////////////////////////
-	// /* Draw Cube 1 */
-	//
-	// 	// Set emissive colour component for cube 1
-	// 	glUniform3f( _shaderEmissiveColLocation, 0.0f, 0.0f, 0.0f );
-	// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube1) );
-	// 	// Set diffuse colour for cube 1
-	// 	glUniform3fv( _shaderDiffuseColLocation, 1, glm::value_ptr(_cubeDiffuseColour) );
-	// 		_cubeModel.Draw( );
-	//
-	//
-	//
-	// /* Draw Cube 2 */
-	//
-	// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube2) );
-	// 	glUniform3f( _shaderDiffuseColLocation, 0.0f, 0.0f, 0.0f );
-	// 	// Set emissive colour component for cubes 2 to be bright so it looks like a light
-	// 	glUniform3f( _shaderEmissiveColLocation, 1.0f, 1.0f, 1.0f );
-	// 	// Set specular colour 
-	// 	glUniform3fv(_shaderSpecularColLocation, 1, glm::value_ptr(_cubeSpecularColour));
-	// 	glUniform1f(_shaderCubeShininessLocation, _cubeShininess);
-	// 		_cubeModel.Draw( );
-	//
-	//
-	//
-	// /* Draw Cube 3 */
-	//
-	// 	// Set emissive colour component for cubes 3 to be dark
-	// 	glUniform3f( _shaderEmissiveColLocation, 0.0f, 0.0f, 0.0f );
-	// 	glUniformMatrix4fv(_shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(_modelMatrixCube3) );
-	// 	// Set diffuse colour for cube 3
-	// 	glUniform3f( _shaderDiffuseColLocation, 0.3f, 0.3f, 1.0f );
-	// 		_cubeModel.Draw( );
-
 
 	// Technically we can do this, but it makes no real sense because we must always have a valid shader program to draw geometry
 	glUseProgram( 0 );
