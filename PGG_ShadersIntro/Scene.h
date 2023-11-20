@@ -1,13 +1,12 @@
 #include <iostream>
 #include "Cube.h"
-
 // The GLM library contains vector and matrix functions and classes for us to use
 // They are designed to easily work with OpenGL!
 #include <GLM/glm.hpp> // This is the main GLM header
 #include <GLM/gtc/matrix_transform.hpp> // This one lets us use matrix transformations
 #include <GLM/gtc/type_ptr.hpp> // This one gives us access to a utility function which makes sending data to OpenGL nice and easy
 
-
+#include "ShaderManager.h"
 
 class Scene
 {
@@ -22,8 +21,7 @@ public:
 	void Update( float deltaTs );
 
 	void Draw();
-
-
+	
 	// Getters and Setters for various scene object variables
 	// These are very specific to the scene, your design should move them out of here
 	void SetCubeDiffuseColour(glm::vec3 value) { _cubeDiffuseColour = value; }
@@ -68,37 +66,17 @@ protected:
 	float _cube1Angle;
 	float _cube2Angle;
 	float _cameraAngleX, _cameraAngleY;
-	float _cubeShininess = 1.0f;
+	float _cubeShininess = 10.0f;
 
 
 	// TODO: Exercise: extract all shader code and put it in its own class
 
-	GLuint _shaderProgram;
-
 	// These are for storing the Uniform locations of shader variables
 	// We need these so we can send Uniform data to them
-	int _shaderModelMatLocation;
-	int _shaderViewMatLocation;
-	int _shaderProjMatLocation;
-
-	int _shaderDiffuseColLocation, _shaderEmissiveColLocation, _shaderSpecularColLocation, _shaderCubeShininessLocation;
-	int _shaderWSLightPosLocation;
-
-	//PBR
-	int _shaderAlbedoLocation;
-	int _shaderMetallicLocation;
-	int _shaderRoughnessLocation;
-	int _shaderAoLocation;
-	int _shaderLightPosLocation;
-	int _shadeLightColLocation;
-	int _shaderCamPosLocation;
+	
 
 	// Utility functions to help us with building our shaders
-	bool CheckShaderCompiled( GLint shader );
-	void PBRShaderLocations();
-	void PhongShaderLocations();
-	bool CompileShaders(std::string vertFilename, std::string fragFilename);
-	void BuildShaders();
+
 	void CameraPositions();
 
 	//draw cube functions
@@ -112,4 +90,6 @@ protected:
 	// Bools for turning animations on and off 
 	bool _animateCentreCube, _animateLight;
 
+private:
+	ShaderManager m_shaderManager;
 };
