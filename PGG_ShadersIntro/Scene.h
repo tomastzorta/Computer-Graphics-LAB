@@ -1,4 +1,4 @@
-
+#include <iostream>
 #include "Cube.h"
 
 // The GLM library contains vector and matrix functions and classes for us to use
@@ -20,7 +20,6 @@ public:
 	void ChangeCameraAngleY( float value ) { _cameraAngleY += value; }
 
 	void Update( float deltaTs );
-
 
 	void Draw();
 
@@ -96,10 +95,19 @@ protected:
 
 	// Utility functions to help us with building our shaders
 	bool CheckShaderCompiled( GLint shader );
+	void PBRShaderLocations();
+	void PhongShaderLocations();
+	bool CompileShaders(std::string vertFilename, std::string fragFilename);
 	void BuildShaders();
+	void CameraPositions();
+
+	//draw cube functions
+	void DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_albedo, float a_metallic, float a_roughness, float a_ao, bool a_bIsLightSource);
+
+	void DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour, float a_cubeShininess, bool a_bIsLightSource);
 
 	glm::vec3 _cubeDiffuseColour;
-	glm::vec3 _cubeSpecularColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 _cubeSpecularColour;
 
 	// Bools for turning animations on and off 
 	bool _animateCentreCube, _animateLight;
