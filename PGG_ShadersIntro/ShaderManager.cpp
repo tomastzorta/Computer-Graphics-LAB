@@ -70,6 +70,16 @@ void ShaderManager::SetUniform(const std::string& a_shaderType, const std::strin
     glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(a_value));
 }
 
+void ShaderManager::SetUniformVec4(const std::string& a_shaderType, const std::string& a_uniformName,
+    const glm::vec4& a_value) const
+{
+    //get the location of the uniform
+    const GLuint shaderProgram = m_shaderPrograms.at(a_shaderType);
+    const int uniformLocation = glGetUniformLocation(shaderProgram, a_uniformName.c_str());
+    //set the uniform
+    glUniform4fv(uniformLocation, 1, glm::value_ptr(a_value));
+}
+
 GLuint ShaderManager::CompileShader(const std::string& a_shaderSource, const GLenum a_shaderType)
 {
     const GLuint shaderProgram = glCreateShader(a_shaderType); // Create a shader

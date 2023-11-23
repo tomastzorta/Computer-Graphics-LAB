@@ -122,8 +122,8 @@ void Scene::DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour,
 	_shaderManager.SetUniform("Phong", "shininess", a_cubeShininess);
 	_shaderManager.SetUniform("Phong", "emissiveColour", a_emissiveColour);
 	_shaderManager.SetUniform("Phong", "specularColour", _cubeSpecularColour);
-	glm::vec3 lightPos = glm::vec3(_modelMatrixCube2 * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-	_shaderManager.SetUniform("Phong", "worldSpaceLightPos", lightPos);
+	glm::vec4 lightPos = _modelMatrixCube2 * glm::vec4(0, 0, 0, 1);
+	_shaderManager.SetUniformVec4("Phong", "worldSpaceLightPos", lightPos);
 
 	_cubeModel.Draw();
 }
