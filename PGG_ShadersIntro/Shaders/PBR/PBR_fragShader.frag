@@ -1,18 +1,19 @@
-﻿#version 330 core
+﻿#version 430 core
 out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
 
 // PBR material properties
-uniform vec3 albedo;
+uniform vec3 albedo = vec3(0.5, 0.0, 0.0);
+uniform vec3 emissiveColour;
 uniform float metallic;
 uniform float roughness;
 uniform float ao;  // Ambient occlusion
 
 // Light properties
 uniform vec3 lightPosition; // Assuming cube 1's position
-uniform vec3 lightColor;    // Assuming cube 1's color
+uniform vec3 lightColour;    // Assuming cube 1's color
 
 uniform vec3 camPos;  // Camera position
 
@@ -73,7 +74,7 @@ void main()
     vec3 H = normalize(V + L);
     float distance = length(lightPosition - WorldPos);
     float attenuation = 1.0 / (distance * distance);
-    vec3 radiance = lightColor * attenuation;
+    vec3 radiance = lightColour * attenuation;
 
     // Cook-Torrance BRDF
     float NDF = DistributionGGX(N, H, roughness);
@@ -100,5 +101,5 @@ void main()
     // Gamma correction
     color = pow(color, vec3(1.0/2.2));
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(emissiveColour + color, 1.0);
 }

@@ -88,16 +88,8 @@ protected:
 
 	void AnimationMatrices();
 	
-	void Scene::DrawCubePBR(const glm::mat4& a_modelMatrix, const glm::vec3& a_colour, 
-							bool a_isLightSource, float a_metallic, float a_roughness, float a_ao);
-
-	void Scene::DrawCubePhong(const glm::mat4& a_modelMatrix, 
-						  const glm::vec3& a_diffuse, 
-						  const glm::vec3& a_specular, 
-						  float a_shininess, 
-						  const glm::vec3& a_emissive, 
-						  bool a_isLightSource);
-
+	void DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour, float a_cubeShininess, bool a_bIsLightSource);
+	void DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_albedo, bool a_metallic, float a_roughness);
 
 private:
 	std::string _currentShader;
