@@ -366,6 +366,20 @@ int main(int argc, char *argv[])
 
 			// We've finished adding stuff to the window
 			ImGui::End();
+
+			//change from PBR to Phong
+			ImGui::Begin("Shader Controls");
+			std::string currentShaderType = myScene.GetShaderType();
+			ImGui::Text("Shader Type");
+			if (ImGui::Button("PBR"))
+			{
+				myScene.SetShaderType("PBR");
+			}
+			if (ImGui::Button("PHONG"))
+			{
+				myScene.SetShaderType("PHONG");
+			}
+			ImGui::End();
 		}
 
 		// Render GUI to screen

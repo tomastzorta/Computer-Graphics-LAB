@@ -17,7 +17,14 @@ Scene::Scene()
 	_animateCentreCube = true;
 	_animateLight = true;
 
-	m_shaderManager.SwitchShader("PBR");
+	if (m_shaderManager.currentShaderType == "PBR" )
+	{
+		m_shaderManager.SwitchShader("PBR");
+	}
+	else if (m_shaderManager.currentShaderType == "PHONG")
+	{
+		m_shaderManager.SwitchShader("PHONG");
+	}
 	
 	//_modelMatrixCube1;
 	_modelMatrixCube2 = glm::scale(glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,0.0f)),glm::vec3(0.1f,0.1f,0.1f));
