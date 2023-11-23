@@ -7,7 +7,6 @@ class ShaderManager
 {
 public:
     
-    GLuint shaderProgram;
     bool CheckShaderCompiled( GLint shader );
     ShaderManager();
     bool CompileShaders(std::string vertFilename, std::string fragFilename);
@@ -20,6 +19,9 @@ public:
     void PhongShaderLocations();
     void CameraShaderLocations();
 
+protected:
+    
+    GLuint shaderProgram;
     //Camera
     int shaderModelMatLocation;
     int shaderViewMatLocation;

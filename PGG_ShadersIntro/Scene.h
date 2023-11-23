@@ -45,10 +45,6 @@ public:
 	void SetCubeShininess(float value) {_cubeShininess = value;}
 	float GetCubeShininess() { return _cubeShininess; }
 
-	void SetShaderType(std::string value) { m_shaderManager.currentShaderType = value;}
-	std::string GetShaderType() { return m_shaderManager.currentShaderType;}
-
-
 protected:
 
 	Cube _cubeModel;

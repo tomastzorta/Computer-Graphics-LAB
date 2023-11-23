@@ -17,14 +17,9 @@ Scene::Scene()
 	_animateCentreCube = true;
 	_animateLight = true;
 
-	if (m_shaderManager.currentShaderType == "PBR" )
-	{
-		m_shaderManager.SwitchShader("PBR");
-	}
-	else if (m_shaderManager.currentShaderType == "PHONG")
-	{
-		m_shaderManager.SwitchShader("PHONG");
-	}
+	
+	m_shaderManager.SwitchShader("PHONG");
+	
 	
 	//_modelMatrixCube1;
 	_modelMatrixCube2 = glm::scale(glm::translate(glm::mat4(1.0f),glm::vec3(1.0f,0.0f,0.0f)),glm::vec3(0.1f,0.1f,0.1f));
@@ -79,6 +74,7 @@ void Scene::Update( float deltaTs )
 void Scene::DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour,
 	float a_cubeShininess, bool a_bIsLightSource)
 {
+	
 	glUniformMatrix4fv(m_shaderManager.shaderModelMatLocation, 1, GL_FALSE, glm::value_ptr(a_modelMatrix));
 	glUniform3fv(m_shaderManager.shaderEmissiveColLocation, 1, glm::value_ptr(a_emissiveColour));
 	glUniform3fv(m_shaderManager.shaderDiffuseColLocation, 1, glm::value_ptr(a_diffuseColour));
