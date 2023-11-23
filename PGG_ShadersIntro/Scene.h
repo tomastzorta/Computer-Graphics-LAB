@@ -23,75 +23,73 @@ public:
 	
 	// Getters and Setters for various scene object variables
 	// These are very specific to the scene, your design should move them out of here
-	void SetCubeDiffuseColour(glm::vec3 value) { _cubeDiffuseColour = value; }
-	glm::vec3 GetCubeDiffuseColour() { return _cubeDiffuseColour; }
+	void SetCubeDiffuseColour(glm::vec3 value) { m_cubeDiffuseColour = value; }
+	glm::vec3 GetCubeDiffuseColour() const { return m_cubeDiffuseColour; }
 
-	void SetCubeSpecularColour(glm::vec3 value) { _cubeSpecularColour = value; }
-	glm::vec3 GetCubeSpecularColour() { return _cubeSpecularColour; }
+	void SetCubeSpecularColour(glm::vec3 value) { m_cubeSpecularColour = value; }
+	glm::vec3 GetCubeSpecularColour() const { return m_cubeSpecularColour; }
 
-	void SetAnimateLight(bool value) { _animateLight = value; }
-	bool GetAnimateLight() { return _animateLight; }
+	void SetAnimateLight(bool value) { m_animateLight = value; }
+	bool GetAnimateLight() const { return m_animateLight; }
 
-	void SetLightAngle(float value) { _cube2Angle = value; }
-	float GetLightAngle() { return _cube2Angle; }
+	void SetLightAngle(float value) { m_cube2Angle = value; }
+	float GetLightAngle() const { return m_cube2Angle; }
 
-	void SetAnimateCube(bool value) { _animateCentreCube = value; }
-	bool GetAnimateCube() { return _animateCentreCube; }
+	void SetAnimateCube(bool value) { m_animateCentreCube = value; }
+	bool GetAnimateCube() const { return m_animateCentreCube; }
 
-	void SetCubeAngle(float value) { _cube1Angle = value; }
-	float GetCubeAngle() { return _cube1Angle; }
+	void SetCubeAngle(float value) { m_cube1Angle = value; }
+	float GetCubeAngle() const { return m_cube1Angle; }
 
-	void SetCubeShininess(float value) {_cubeShininess = value;}
-	float GetCubeShininess() { return _cubeShininess; }
+	void SetCubeShininess(float value) {m_cubeShininess = value;}
+	float GetCubeShininess() const { return m_cubeShininess; }
 
-	void SetCurrentShader(std::string value) { _currentShader = value; }
+	void SetCurrentShader(std::string value) { m_currentShader = value; }
 
-	void SetMetallic(float value) { _metallic = value; }
-	float GetMetallic() { return _metallic; }
+	void SetMetallic(bool value) { m_metallic = value ? 1.0f : 0.0f; }
+	float GetMetallic() const { return m_metallic;}
 
-	void SetRoughness(float value) { _roughness = value; }
-	float GetRoughness() { return _roughness; }
+	void SetRoughness(float value) { m_roughness = value; }
+	float GetRoughness() const { return m_roughness; }
 
 
 protected:
-
-	Cube _cubeModel;
+	Cube m_cubeModel;
 
 	// Model matrices for three cubes
-	glm::mat4 _modelMatrixCube1;
-	glm::mat4 _modelMatrixCube2;
-	glm::mat4 _modelMatrixCube3;
-		
+	glm::mat4 m_modelMatrixCube1;
+	glm::mat4 m_modelMatrixCube2;
+	glm::mat4 m_modelMatrixCube3;
+
 	// All cubes share the same viewing matrix - this defines the camera's orientation and position
-	glm::mat4 _viewMatrix;
-	
+	glm::mat4 m_viewMatrix;
+
 	// The projection matrix defines the camera's view (like its lens)
-	glm::mat4 _projMatrix;
+	glm::mat4 m_projMatrix;
 
 
 	// Angle of rotation for our cube
-	float _cube1Angle;
-	float _cube2Angle;
-	float _cameraAngleX, _cameraAngleY;
-	float _cubeShininess;
+	float m_cube1Angle;
+	float m_cube2Angle;
+	float m_cameraAngleX, m_cameraAngleY;
+	float m_cubeShininess;
 
-	float _metallic;
-	float _roughness;
-	
-	glm::vec3 _cubeDiffuseColour;
-	glm::vec3 _cubeSpecularColour;
+	float m_metallic;
+	float m_roughness;
+
+	glm::vec3 m_cubeDiffuseColour;
+	glm::vec3 m_cubeSpecularColour;
 
 	// Bools for turning animations on and off 
-	bool _animateCentreCube, _animateLight;
+	bool m_animateCentreCube, m_animateLight;
 
-	ShaderManager _shaderManager;
+	ShaderManager m_shaderManager;
 
 	void AnimationMatrices();
-	
-	void DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour, float a_cubeShininess);
-	void DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_albedo, bool a_metallic, float a_roughness, bool a_bIsLightSource);
-	void CheckOpenGLError();
+
+	void DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour,float a_cubeShininess);
+	void DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_albedo, bool a_metallic,float a_roughness);
 
 private:
-	std::string _currentShader;
+	std::string m_currentShader;
 };

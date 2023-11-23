@@ -15,9 +15,6 @@ public:
     void LoadShader(const std::string& a_shaderType, const std::string& a_vertexPath, const std::string& a_fragmentPath);
     void UseShader(const std::string& a_shaderType) const;
     void SetUniform(const std::string& a_shaderType, const std::string& a_uniformName, int a_value) const;
-
-
-    void SharedUniformLocations(const std::string& a_shaderType);
     
     void SetUniform(const std::string& a_shaderType, const std::string& a_uniformName, const float a_value) const;
     void SetUniform(const ::std::string& a_shaderType, const ::std::string& a_uniformName, const glm::vec3& a_value) const;

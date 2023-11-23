@@ -379,8 +379,8 @@ int main(int argc, char *argv[])
 			ImGui::End();
 
 			ImGui::Begin("PBR Controls");
-			float metallic = myScene.GetMetallic();
-			ImGui::SliderFloat("Metallic", &metallic, 0.0f, 1.0f);
+			bool metallic = myScene.GetMetallic() > 0.0f; // This will be true if metallic is greater than 0
+			ImGui::Checkbox("Metallic", &metallic);
 			myScene.SetMetallic(metallic);
 			float roughness = myScene.GetRoughness();
 			ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f);
