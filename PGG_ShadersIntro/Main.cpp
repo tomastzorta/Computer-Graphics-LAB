@@ -8,6 +8,9 @@
 // To compile and link GLEW like this ('statically') you must add  GLEW_STATIC  into Configuration Properties -> C/C++ -> Preprocessor -> Preprocessor Definitions
 #include "glew.h"
 
+
+#include "AnimationManager.h"
+#include "CameraManager.h"
 #include "Scene.h"
 
 // GUI system: https://github.com/ocornut/imgui
@@ -162,6 +165,8 @@ int main(int argc, char *argv[])
 
 
 	Scene myScene;
+	AnimationManager myAnimationManager;
+	CameraManager myCameraManager;
 
 
 	// Ok, hopefully finished with initialisation now
@@ -329,16 +334,16 @@ int main(int argc, char *argv[])
 			myScene.SetCubeDiffuseColour(currentCubeDiffuseCol);
 
 			// This is a checkbox for whether or not the light is rotating
-			bool currentAnimLight = myScene.GetAnimateLight();
+			bool currentAnimLight = myAnimationManager.GetAnimateLight();
 			ImGui::Checkbox("Animate Light", &currentAnimLight);
-			myScene.SetAnimateLight(currentAnimLight);
+			myAnimationManager.SetAnimateLight(currentAnimLight);
 
 			// This is a slider for the current angle of the light
 			// Note that when it's animating it will slide back and forth automatically
 			// The user can then grab and adjust
-			float lightAngle = myScene.GetLightAngle();
+			float lightAngle = myAnimationManager.GetLightAngle();
 			ImGui::SliderFloat("Light Angle", &lightAngle, 0.0f, 2.0f*3.141592653589793238462643383 );
-			myScene.SetLightAngle(lightAngle);
+			myAnimationManager.SetLightAngle(lightAngle);
 
 			float cubeShininess = myScene.GetCubeShininess();
 			ImGui::SliderFloat("Cube Shininess", &cubeShininess, 1.0f, 50.0f);
@@ -350,14 +355,14 @@ int main(int argc, char *argv[])
 			myScene.SetCubeSpecularColour(currentCubeSpecularCol);
 
 			// Checkbox for the centre cube's animation
-			bool currentAnimCube = myScene.GetAnimateCube();
+			bool currentAnimCube = myAnimationManager.GetAnimateCube();
 			ImGui::Checkbox("Animate Cube", &currentAnimCube);
-			myScene.SetAnimateCube(currentAnimCube);
+			myAnimationManager.SetAnimateCube(currentAnimCube);
 
 			// Slider for the cube's rotation angle
-			float cubeAngle = myScene.GetCubeAngle();
+			float cubeAngle = myAnimationManager.GetCube1Angle();
 			ImGui::SliderFloat("Cube Angle", &cubeAngle, 0.0f, 2.0f * 3.141592653589793238462643383);
-			myScene.SetCubeAngle(cubeAngle);
+			myAnimationManager.SetCube1Angle(cubeAngle);
 			
 			//add shininess
 
