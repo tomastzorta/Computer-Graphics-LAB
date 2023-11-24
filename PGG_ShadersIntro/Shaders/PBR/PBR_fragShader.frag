@@ -5,8 +5,8 @@ in vec3 WorldPos;
 in vec3 Normal;
 
 // PBR material properties
-uniform vec3 albedo = vec3(0.5, 0.0, 0.0);
-uniform vec3 emissiveColour;
+uniform vec3 albedo;
+uniform vec3 emissiveColour = {0,0,0};
 uniform float metallic;
 uniform float roughness;
 uniform float ao;  // Ambient occlusion

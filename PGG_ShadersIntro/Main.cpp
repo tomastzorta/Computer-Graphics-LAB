@@ -23,7 +23,7 @@ bool showLightingWindow = true;
 
 // An initialisation function, mainly for GLEW
 // This will also print to console the version of OpenGL we are using
-bool InitSDL() {
+bool InitialiseSDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "Whoops! Something went very wrong, cannot initialise SDL :(" << std::endl;
         return false;
@@ -34,7 +34,7 @@ bool InitSDL() {
     return true;
 }
 
-bool InitGL() {
+bool InitialiseGLEW() {
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (GLEW_OK != err) {
@@ -50,32 +50,21 @@ bool InitGL() {
 }
 
 
-bool InitOpenGL(SDL_Window* window, SDL_GLContext& glcontext) {
+bool InitialiseOpenGL(SDL_Window* window, SDL_GLContext& glcontext) {
     glcontext = SDL_GL_CreateContext(window);
-    if (!InitGL()) {
+    if (!InitialiseGLEW()) {
         return false;
     }
     return true;
 }
 
-SDL_Window* CreateWindow(int width, int height) {
+SDL_Window* CreateSDLWindow(int width, int height) {
     int winPosX = 100, winPosY = 100;
     SDL_Window* window = SDL_CreateWindow("s5216712 - Osman Tzorta GEP", winPosX, winPosY, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
     return window;
 }
 
-bool InitGLEW() {
-    glewExperimental = GL_TRUE;
-    GLenum err = glewInit();
-    if (GLEW_OK != err) {
-        std::cerr << "Error: GLEW failed to initialise with message: " << glewGetErrorString(err) << std::endl;
-        return false;
-    }
-    std::cout << "INFO: Using GLEW " << glewGetString(GLEW_VERSION) << std::endl;
-    return true;
-}
-
-void InitImGui(SDL_Window* window, SDL_GLContext& glcontext) {
+void InitialiseGUI(SDL_Window* window, SDL_GLContext& glcontext) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -105,7 +94,7 @@ void RenderScene(Scene& myScene) {
     myScene.Draw();
 }
 
-void RenderImGui(Scene& myScene, bool& showLightingWindow) {
+void RenderGUI(Scene& myScene, bool& showLightingWindow) {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL2_NewFrame();
     ImGui::NewFrame();
@@ -208,17 +197,15 @@ void RenderImGui(Scene& myScene, bool& showLightingWindow) {
 }
 
 int main(int argc, char *argv[]) {
-    if (!InitSDL()) return -1;
+    if (!InitialiseSDL()) return -1;
 
-    SDL_Window* window = CreateWindow(640, 640);
+    SDL_Window* window = CreateSDLWindow(640, 640);
     if (!window) return -1;
 
     SDL_GLContext glcontext;
-    if (!InitOpenGL(window, glcontext)) return -1;
+    if (!InitialiseOpenGL(window, glcontext)) return -1;
 
-    if (!InitGLEW()) return -1;
-
-    InitImGui(window, glcontext);
+    InitialiseGUI(window, glcontext);
 
     bool running = true;
     SDL_Event incomingEvent;
@@ -235,7 +222,7 @@ int main(int argc, char *argv[]) {
 
         UpdateScene(myScene, deltaTs);
         RenderScene(myScene);
-        RenderImGui(myScene, showLightingWindow);
+        RenderGUI(myScene, showLightingWindow);
 
         SDL_GL_SwapWindow(window);
 

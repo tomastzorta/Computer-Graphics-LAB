@@ -35,11 +35,11 @@ void Scene::Draw()
 	if (m_currentShader == "PBR")
 	{
 		/* Draw Cube 1 PBR - Standard Object */
-		DrawCubePBR(m_animationManager.GetModelMatrixCube1(),glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeDiffuseColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+		DrawCubePBR(m_animationManager.GetModelMatrixCube1(),glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeDiffuseColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
 		/* Draw Cube 2 PBR - Light Source */
 		DrawCubePBR(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), false, 0.1f );
 		/* Draw Cube 3 PBR - Floor */
-		DrawCubePBR(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.3f, 0.3f, 1.0f), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness() );
+		DrawCubePBR(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.3f, 0.3f, 1.0f), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness() );
 	}
 	else if (m_currentShader == "Phong")
 	{
