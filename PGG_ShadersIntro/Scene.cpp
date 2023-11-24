@@ -9,7 +9,7 @@
 
 Scene::Scene()
 {
-	m_currentShader = "Phong";
+	m_currentShader = "PBR";
 
 	m_shaderManager.LoadShader("PBR", "Shaders/PBR/PBR_vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
 	m_shaderManager.LoadShader("Phong", "Shaders/Phong/vertShader.vert", "Shaders/Phong/fragShader.frag");
@@ -63,7 +63,7 @@ void Scene::DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour,
 	m_shaderManager.SetUniform("Phong", "shininess", a_cubeShininess);
 	m_shaderManager.SetUniform("Phong", "emissiveColour", a_emissiveColour);
 	m_shaderManager.SetUniform("Phong", "specularColour", m_cubeModel.GetCubeSpecularColour());
-	m_shaderManager.SetUniformVec4("Phong", "worldSpaceLightPos", m_animationManager.GetModelMatrixCube2() * glm::vec4(0, 0, 0, 1));
+	m_shaderManager.SetUniform("Phong", "worldSpaceLightPos", m_animationManager.GetModelMatrixCube2() * glm::vec4(0, 0, 0, 1));
 
 	m_cubeModel.Draw();
 }

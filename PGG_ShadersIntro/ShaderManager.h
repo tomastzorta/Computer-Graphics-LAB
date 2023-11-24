@@ -19,7 +19,7 @@ public:
     void SetUniform(const std::string& a_shaderType, const std::string& a_uniformName, const float a_value) const;
     void SetUniform(const ::std::string& a_shaderType, const ::std::string& a_uniformName, const glm::vec3& a_value) const;
     void SetUniform(const std::string& a_shaderType, const std::string& a_uniformName, const glm::mat4& a_value) const;
-    void SetUniformVec4(const std::string& a_shaderType, const std::string& a_uniformName, const glm::vec4& a_value) const;
+    void SetUniform(const std::string& a_shaderType, const std::string& a_uniformName, const glm::vec4& a_value) const;
     
 
 private:
