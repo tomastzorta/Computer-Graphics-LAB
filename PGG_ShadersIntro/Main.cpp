@@ -8,9 +8,6 @@
 // To compile and link GLEW like this ('statically') you must add  GLEW_STATIC  into Configuration Properties -> C/C++ -> Preprocessor -> Preprocessor Definitions
 #include "glew.h"
 
-
-#include "AnimationManager.h"
-#include "CameraManager.h"
 #include "Scene.h"
 
 // GUI system: https://github.com/ocornut/imgui
@@ -165,8 +162,6 @@ int main(int argc, char *argv[])
 
 
 	Scene myScene;
-	AnimationManager myAnimationManager;
-	CameraManager myCameraManager;
 
 
 	// Ok, hopefully finished with initialisation now
@@ -318,82 +313,96 @@ int main(int argc, char *argv[])
 		{
 			// Create a window, give it a name
 			// All ImGui commands after this to create widgets will be added to the window
-			ImGui::Begin("Lighting Controls");
-
-			// This is how you add a bit of text to the window
-			ImGui::Text("Hello World!");
-
+			ImGui::Begin("Cube Animation Controls");
+			
 			// Here, we do the same sort of thing several times for different properties:
 			//  1. Get a state from the scene
 			//  2. Use the GUI to present an editor for it
 			//  3. Send it back to the scene in case it's changed
 
-			// This is a colour editor for the diffuse colour
-			glm::vec3 currentCubeDiffuseCol = myScene.GetCubeDiffuseColour();
-			ImGui::ColorEdit3("Cube Colour", &(currentCubeDiffuseCol[0]));
-			myScene.SetCubeDiffuseColour(currentCubeDiffuseCol);
+			// Checkbox for whether or not the light is rotating
+			bool currentAnimLight = myScene.m_animationManager.GetAnimateLight();
+			if (ImGui::Checkbox("Animate Light", &currentAnimLight)) {
+				myScene.m_animationManager.SetAnimateLight(currentAnimLight);
+			}
 
-			// This is a checkbox for whether or not the light is rotating
-			bool currentAnimLight = myAnimationManager.GetAnimateLight();
-			ImGui::Checkbox("Animate Light", &currentAnimLight);
-			myAnimationManager.SetAnimateLight(currentAnimLight);
+			// Slider for the current angle of the light
+			float lightAngle = myScene.m_animationManager.GetLightAngle();
+			if (ImGui::SliderFloat("Light Angle", &lightAngle, 0.0f, 2.0f * 3.141592653589793238462643383)) {
+				myScene.m_animationManager.SetLightAngle(lightAngle);
+			}
 
-			// This is a slider for the current angle of the light
-			// Note that when it's animating it will slide back and forth automatically
-			// The user can then grab and adjust
-			float lightAngle = myAnimationManager.GetLightAngle();
-			ImGui::SliderFloat("Light Angle", &lightAngle, 0.0f, 2.0f*3.141592653589793238462643383 );
-			myAnimationManager.SetLightAngle(lightAngle);
-
-			float cubeShininess = myScene.GetCubeShininess();
-			ImGui::SliderFloat("Cube Shininess", &cubeShininess, 1.0f, 50.0f);
-			myScene.SetCubeShininess(cubeShininess);
-
-			//add specular colour
-			glm::vec3 currentCubeSpecularCol = myScene.GetCubeSpecularColour();
-			ImGui::ColorEdit3("Specular Colour", &(currentCubeSpecularCol[0]));
-			myScene.SetCubeSpecularColour(currentCubeSpecularCol);
-
-			// Checkbox for the centre cube's animation
-			bool currentAnimCube = myAnimationManager.GetAnimateCube();
-			ImGui::Checkbox("Animate Cube", &currentAnimCube);
-			myAnimationManager.SetAnimateCube(currentAnimCube);
+			// Checkbox for the cube's animation
+			bool currentAnimCube = myScene.m_animationManager.GetAnimateCube();
+			if (ImGui::Checkbox("Animate Cube", &currentAnimCube)) {
+				myScene.m_animationManager.SetAnimateCube(currentAnimCube);
+			}
 
 			// Slider for the cube's rotation angle
-			float cubeAngle = myAnimationManager.GetCube1Angle();
-			ImGui::SliderFloat("Cube Angle", &cubeAngle, 0.0f, 2.0f * 3.141592653589793238462643383);
-			myAnimationManager.SetCube1Angle(cubeAngle);
-			
-			//add shininess
-
-			// Showing how to insert text into a string and also get FPS!!
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-			// We've finished adding stuff to the window
+			float cube1Angle = myScene.m_animationManager.GetCube1Angle();
+			if (ImGui::SliderFloat("Cube 1 Angle", &cube1Angle, 0.0f, 2.0f * 3.141592653589793238462643383)) {
+				myScene.m_animationManager.SetCube1Angle(cube1Angle);
+			}
 			ImGui::End();
 
-			ImGui::Begin("Shader Controls");
-			if (ImGui::Button("Use PBR"))
-			{
+			ImGui::Begin("Lighting Models");
+			// Shader Control Buttons
+			if (ImGui::Button("Use Phyisical Based Rendering (Fresnel)")) {
 				myScene.SetCurrentShader("PBR");
 			}
-			if (ImGui::Button("Use Phong"))
-			{
+			if (ImGui::Button("Use Phong Lighting")) {
 				myScene.SetCurrentShader("Phong");
 			}
 			ImGui::End();
 
-			ImGui::Begin("PBR Controls");
-			bool metallic = myScene.GetMetallic() > 0.0f; // This will be true if metallic is greater than 0
-			ImGui::Checkbox("Metallic", &metallic);
-			myScene.SetMetallic(metallic);
-			float roughness = myScene.GetRoughness();
-			ImGui::SliderFloat("Roughness", &roughness, 0.0f, 1.0f);
-			myScene.SetRoughness(roughness);
+			// Cube Settings Window
+			ImGui::Begin("Cube Settings");
+			if (myScene.GetCurrentShader() == "Phong")
+			{
+				// Colour editor for the diffuse colour
+				glm::vec3 currentCubeDiffuseCol = myScene.m_cubeModel.GetCubeDiffuseColour();
+				if (ImGui::ColorEdit3("Cube Colour", &(currentCubeDiffuseCol[0]))) {
+					myScene.m_cubeModel.SetCubeDiffuseColour(currentCubeDiffuseCol);
+				}
+				// Slider for cube shininess
+				float cubeShininess = myScene.m_cubeModel.GetCubeShininess();
+				if (ImGui::SliderFloat("Cube Shininess", &cubeShininess, 0.0f, 100.0f)) {
+					myScene.m_cubeModel.SetCubeShininess(cubeShininess);
+				}
+
+				// Colour editor for the specular colour
+				glm::vec3 currentCubeSpecularCol = myScene.m_cubeModel.GetCubeSpecularColour();
+				if (ImGui::ColorEdit3("Light Colour", &(currentCubeSpecularCol[0]))) {
+					myScene.m_cubeModel.SetCubeSpecularColour(currentCubeSpecularCol);
+				}
+			}
+			else if (myScene.GetCurrentShader() == "PBR")
+			{
+				// Colour editor for the diffuse colour
+				glm::vec3 currentCubeDiffuseCol = myScene.m_cubeModel.GetCubeDiffuseColour();
+				if (ImGui::ColorEdit3("Cube Colour", &(currentCubeDiffuseCol[0]))) {
+					myScene.m_cubeModel.SetCubeDiffuseColour(currentCubeDiffuseCol);
+				}
+				//metallic
+				bool metallic = myScene.m_cubeModel.GetCubeMetallic();
+				if (ImGui::Checkbox("Is Cube Metallic?", &metallic)) {
+					myScene.m_cubeModel.SetCubeMetallic(metallic);
+				}
+
+				//roughness
+				float roughness = myScene.m_cubeModel.GetCubeRoughness();
+				if (ImGui::SliderFloat("Cube Roughness", &roughness, 0.0f, 1.0f)) {
+					myScene.m_cubeModel.SetCubeRoughness(roughness);
+				}
+			}
+			ImGui::End();
+			// Statistic Window
+			ImGui::Begin("Statistics");
+			// Showing how to insert text into a string and also get FPS!!
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 			ImGui::End();
 			
 		}
-
 		// Render GUI to screen
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

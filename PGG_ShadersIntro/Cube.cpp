@@ -14,7 +14,8 @@ Cube::Cube()
 
 	// Simple vertex data for a cube
 	// (actually this is only four sides of a cube, you will have to expand this code if you want a complete cube :P )
-	float vertices[] = {
+	float vertices[] =
+		{
 		-0.5f, 0.5f, 0.5f,
 		-0.5f,-0.5f, 0.5f,
 		 0.5f, 0.5f, 0.5f,
@@ -85,7 +86,8 @@ Cube::Cube()
 	
 	// Normal data for our incomplete cube
 	// Each entry is the normal for the corresponding vertex in the position data above
-	float normals[] = {
+	float normals[] =
+		{
 		 0.0f, 0.0f, 1.0f,
 		 0.0f, 0.0f, 1.0f,
 		 0.0f, 0.0f, 1.0f,
@@ -153,11 +155,17 @@ Cube::Cube()
 	// If you then change the code from elsewhere, your current code could mysteriously stop working properly!
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray( 0 );
-
+	
 	// Technically we can do this, because the enabled / disabled state is stored in the VAO
 	glDisableVertexAttribArray(0);
-	
 
+	//Cube Specific Properties
+	m_cubeDiffuseColour = glm::vec3(1.0f, 0.0f, 0.0f);
+	m_cubeSpecularColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	m_cubeShininess = 20.0f;
+	m_roughness = 0.5f;
+	m_metallic = 0.0f;
+	
 }
 
 Cube::~Cube()

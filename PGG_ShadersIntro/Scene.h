@@ -20,45 +20,18 @@ public:
 
 	void Update( float deltaTs );
 	void Draw();
-	void Startup();
 	
-	// Getters and Setters for various scene object variables
-	// These are very specific to the scene, your design should move them out of here
-	void SetCubeDiffuseColour(glm::vec3 value) { m_cubeDiffuseColour = value; }
-	glm::vec3 GetCubeDiffuseColour() const { return m_cubeDiffuseColour; }
-
-	void SetCubeSpecularColour(glm::vec3 value) { m_cubeSpecularColour = value; }
-	glm::vec3 GetCubeSpecularColour() const { return m_cubeSpecularColour; }
-
-	void SetCubeShininess(float value) {m_cubeShininess = value;}
-	float GetCubeShininess() const { return m_cubeShininess; }
-
 	void SetCurrentShader(std::string value) { m_currentShader = value; }
+	std::string GetCurrentShader() const { return m_currentShader; }
 
-	void SetMetallic(bool value) { m_metallic = value ? 1.0f : 0.0f; }
-	float GetMetallic() const { return m_metallic;}
-
-	void SetRoughness(float value) { m_roughness = value; }
-	float GetRoughness() const { return m_roughness; }
-
-
-protected:
 	Cube m_cubeModel;
-	
-	float m_cubeShininess;
-	float m_metallic;
-	float m_roughness;
-
-	glm::vec3 m_cubeDiffuseColour;
-	glm::vec3 m_cubeSpecularColour;
-
 	ShaderManager m_shaderManager;
 	AnimationManager m_animationManager;
 	CameraManager m_cameraManager;
 
+protected:
 	void DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour,float a_cubeShininess);
 	void DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_albedo, bool a_metallic,float a_roughness);
-
 private:
 	std::string m_currentShader;
 };
