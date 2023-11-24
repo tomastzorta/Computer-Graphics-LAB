@@ -172,6 +172,11 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 				if (ImGui::ColorEdit3("Cube Colour", &(currentCubeDiffuseCol[0]))) {
 					myScene.m_cubeModel.SetCubeDiffuseColour(currentCubeDiffuseCol);
 				}
+				// Colour editor for the specular colour
+				glm::vec3 currentCubeSpecularCol = myScene.m_cubeModel.GetCubeSpecularColour();
+				if (ImGui::ColorEdit3("Light Colour", &(currentCubeSpecularCol[0]))) {
+					myScene.m_cubeModel.SetCubeSpecularColour(currentCubeSpecularCol);
+				}
 				//metallic
 				bool metallic = myScene.m_cubeModel.GetCubeMetallic();
 				if (ImGui::Checkbox("Is Cube Metallic?", &metallic)) {

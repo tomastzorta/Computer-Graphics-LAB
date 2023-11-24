@@ -78,7 +78,7 @@ void Scene::DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, g
 	m_shaderManager.SetUniform("PBR", "roughness", a_roughness);
 	m_shaderManager.SetUniform("PBR", "emissiveColour", a_emissiveColour);
 	m_shaderManager.SetUniform("PBR", "lightPosition", glm::vec3(m_animationManager.GetModelMatrixCube2() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)));
-	m_shaderManager.SetUniform("PBR", "lightColour", glm::vec3(1.0f, 1.0f, 1.0f));
+	m_shaderManager.SetUniform("PBR", "lightColour", m_cubeModel.GetCubeSpecularColour());
 
 	m_cubeModel.Draw();
 }
