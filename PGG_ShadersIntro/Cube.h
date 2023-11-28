@@ -30,6 +30,9 @@ public:
 	void SetCubeRoughness(float value) { m_roughness = value; }
 	float GetCubeRoughness() const { return m_roughness; }
 
+	void SetCubeSheen(float value) { m_sheen = value; }
+	float GetCubeSheen() const { return m_sheen; }
+
 
 protected:
 	GLuint _VAO;
@@ -38,6 +41,7 @@ protected:
 	float m_cubeShininess;
 	float m_metallic;
 	float m_roughness;
+	float m_sheen;
 
 	glm::vec3 m_cubeDiffuseColour;
 	glm::vec3 m_cubeSpecularColour;

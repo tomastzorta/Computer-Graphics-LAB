@@ -165,6 +165,7 @@ Cube::Cube()
 	m_cubeShininess = 20.0f;
 	m_roughness = 0.5f;
 	m_metallic = 0.0f;
+	m_sheen = 0.0f;
 	
 }
 

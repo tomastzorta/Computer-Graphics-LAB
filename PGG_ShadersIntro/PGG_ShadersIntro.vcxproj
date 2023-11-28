@@ -263,6 +263,7 @@
     <Text Include="Shaders\Phong\fragShader.frag" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Shaders\Disney_PBR\DPBR_fragShader.frag" />
     <Content Include="Shaders\PBR\PBR_fragShader.frag" />
     <Content Include="Shaders\Phong\vertShader.vert" />
   </ItemGroup>

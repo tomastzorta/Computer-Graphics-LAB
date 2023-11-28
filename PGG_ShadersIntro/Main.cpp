@@ -61,6 +61,7 @@ bool InitialiseOpenGL(SDL_Window* window, SDL_GLContext& glcontext) {
 SDL_Window* CreateSDLWindow(int width, int height) {
     int winPosX = 100, winPosY = 100;
     SDL_Window* window = SDL_CreateWindow("s5216712 - Osman Tzorta GEP", winPosX, winPosY, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+	//unlimited fps
     return window;
 }
 
@@ -189,6 +190,36 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 					myScene.m_cubeModel.SetCubeRoughness(roughness);
 				}
 			}
+    		else if (myScene.GetCurrentShader() == "Disney")
+			{
+    			if (myScene.GetCurrentShader() == "Disney")
+    			{
+    				// Colour editor for the albedo
+    				glm::vec3 currentAlbedo = myScene.m_cubeModel.GetCubeDiffuseColour();
+    				if (ImGui::ColorEdit3("Albedo", &(currentAlbedo[0]))) {
+    					myScene.m_cubeModel.SetCubeDiffuseColour(currentAlbedo);
+    				}
+
+    				//metallic
+    				bool metallic = myScene.m_cubeModel.GetCubeMetallic();
+    				if (ImGui::Checkbox("Is Cube Metallic?", &metallic)) {
+    					myScene.m_cubeModel.SetCubeMetallic(metallic);
+    				}
+
+    				//roughness
+    				float roughness = myScene.m_cubeModel.GetCubeRoughness();
+    				if (ImGui::SliderFloat("Cube Roughness", &roughness, 0.0f, 1.0f)) {
+    					myScene.m_cubeModel.SetCubeRoughness(roughness);
+    				}
+
+    				// Slider for sheen
+    				float currentSheen = myScene.m_cubeModel.GetCubeSheen();
+    				if (ImGui::SliderFloat("Sheen", &currentSheen, 0.0f, 1.0f)) {
+    					myScene.m_cubeModel.SetCubeSheen(currentSheen);
+    				}
+    			}
+			}
+    	
 			ImGui::End();
 			// Statistic Window
 			ImGui::Begin("Statistics");
@@ -204,7 +235,7 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 int main(int argc, char *argv[]) {
     if (!InitialiseSDL()) return -1;
 
-    SDL_Window* window = CreateSDLWindow(640, 640);
+    SDL_Window* window = CreateSDLWindow(1280, 1280);
     if (!window) return -1;
 
     SDL_GLContext glcontext;
