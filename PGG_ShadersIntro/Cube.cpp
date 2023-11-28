@@ -160,12 +160,19 @@ Cube::Cube()
 	glDisableVertexAttribArray(0);
 
 	//Cube Specific Properties
-	m_cubeDiffuseColour = glm::vec3(1.0f, 0.0f, 0.0f);
-	m_cubeSpecularColour = glm::vec3(1.0f, 1.0f, 1.0f);
+	m_cubeColour = glm::vec3(1.0f, 0.0f, 0.0f);
+	m_lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 	m_cubeShininess = 20.0f;
 	m_roughness = 0.5f;
 	m_metallic = 0.0f;
 	m_sheen = 0.0f;
+	m_sheenTint = 0.0f;
+	m_subsurface = 0.0f;
+	m_specular = 0.5f;
+	m_specularTint = 0.0f;
+	m_anisotropic = 0.0f;
+	m_clearcoat = 0.0f;
+	m_clearcoatGloss = 0.0f;
 	
 }
 

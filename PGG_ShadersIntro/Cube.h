@@ -15,11 +15,11 @@ public:
 
 	void Draw();
 
-	void SetCubeDiffuseColour(glm::vec3 value) { m_cubeDiffuseColour = value; }
-	glm::vec3 GetCubeDiffuseColour() const { return m_cubeDiffuseColour; }
+	void SetCubeColour(glm::vec3 value) { m_cubeColour = value; }
+	glm::vec3 GetCubeColour() const { return m_cubeColour; }
 
-	void SetCubeSpecularColour(glm::vec3 value) { m_cubeSpecularColour = value; }
-	glm::vec3 GetCubeSpecularColour() const { return m_cubeSpecularColour; }
+	void SetLightColour(glm::vec3 value) { m_lightColour = value; }
+	glm::vec3 GetLightColour() const { return m_lightColour; }
 
 	void SetCubeShininess(float value) {m_cubeShininess = value;}
 	float GetCubeShininess() const { return m_cubeShininess; }
@@ -33,18 +33,48 @@ public:
 	void SetCubeSheen(float value) { m_sheen = value; }
 	float GetCubeSheen() const { return m_sheen; }
 
+	void SetCubeSheenTint(float value) { m_sheenTint = value; }
+	float GetCubeSheenTint() const { return m_sheenTint; }
+
+	void SetCubeSubsurface(float value) { m_subsurface = value; }
+	float GetCubeSubsurface() const { return m_subsurface; }
+
+	void SetCubeSpecular(float value) { m_specular = value; }
+	float GetCubeSpecular() const { return m_specular; }
+
+	void SetCubeSpecularTint(float value) { m_specularTint = value; }
+	float GetCubeSpecularTint() const { return m_specularTint; }
+
+	void SetCubeAnisotropic(float value) { m_anisotropic = value; }
+	float GetCubeAnisotropic() const { return m_anisotropic; }
+
+	void SetCubeClearcoat(float value) { m_clearcoat = value; }
+	float GetCubeClearcoat() const { return m_clearcoat; }
+
+	void SetCubeClearcoatGloss(float value) { m_clearcoatGloss = value; }
+	float GetCubeClearcoatGloss() const { return m_clearcoatGloss; }
+
 
 protected:
 	GLuint _VAO;
 	unsigned int _numVertices;
 
-	float m_cubeShininess;
 	float m_metallic;
+	float m_subsurface;
+	float m_specular;
 	float m_roughness;
+	float m_specularTint;
+	float m_anisotropic;
 	float m_sheen;
+	float m_sheenTint;
+	float m_clearcoat;
+	float m_clearcoatGloss;
+	float m_cubeShininess;
+	
+	
 
-	glm::vec3 m_cubeDiffuseColour;
-	glm::vec3 m_cubeSpecularColour;
+	glm::vec3 m_cubeColour;
+	glm::vec3 m_lightColour;
 };
 
 #endif
