@@ -137,7 +137,7 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 
 			ImGui::Begin("Lighting Models");
 			// Shader Control Buttons
-			if (ImGui::Button("Use Phyisical Based Rendering (Fresnel)"))
+			if (ImGui::Button("Use Cook-Torrance PBR"))
 			{
 				myScene.SetCurrentShader("PBR");
 			}
@@ -151,6 +151,21 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 			}
 			ImGui::End();
 
+    		ImGui::Begin("Cube Presets (Across All 3 Shaders)");
+    		if (ImGui::Button("Brushed Metal Cube"))
+    		{
+    			myScene.SetBrushedMetalCube();
+    		}
+    		if (ImGui::Button("Plastic Cube"))
+    		{
+    			myScene.SetPlasticCube();
+    		}
+    		if (ImGui::Button("Velvet Fabric Cube"))
+    		{
+    			myScene.SetVelvetFabricCube();
+    		}
+    		ImGui::End();
+
 			// Cube Settings Window
 			ImGui::Begin("Cube Settings");
 			if (myScene.GetCurrentShader() == "Phong")
@@ -163,7 +178,7 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 				}
 				// Slider for cube shininess
 				float cubeShininess = myScene.m_cubeModel.GetCubeShininess();
-				if (ImGui::SliderFloat("Cube Shininess", &cubeShininess, 0.0f, 100.0f))
+				if (ImGui::SliderFloat("Cube Shininess", &cubeShininess, 1.0f, 100.0f))
 				{
 					myScene.m_cubeModel.SetCubeShininess(cubeShininess);
 				}
@@ -205,102 +220,105 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 			}
     		else if (myScene.GetCurrentShader() == "Disney")
 			{
-    			if (myScene.GetCurrentShader() == "Disney")
+    			// Colour editor for the albedo
+    			glm::vec3 currentAlbedo = myScene.m_cubeModel.GetCubeColour();
+    			if (ImGui::ColorEdit3("Cube Colour", &(currentAlbedo[0])))
     			{
-    				ImGui::Text("Cube Presets");
-				    if (ImGui::Button("Brushed Metal Cube"))
-				    {
-				    	myScene.SetBrushedMetalCube();
-				    }
-				    if (ImGui::Button("Plastic Cube"))
-				    {
-					    myScene.SetPlasticCube();
-				    }
-				    
-    				// Colour editor for the albedo
-    				glm::vec3 currentAlbedo = myScene.m_cubeModel.GetCubeColour();
-    				if (ImGui::ColorEdit3("Cube Colour", &(currentAlbedo[0])))
-    				{
-    					myScene.m_cubeModel.SetCubeColour(currentAlbedo);
-    				}
-
-    				//metallic
-    				bool metallic = myScene.m_cubeModel.GetCubeMetallic();
-    				if (ImGui::Checkbox("Is Cube Metallic?", &metallic))
-    				{
-    					myScene.m_cubeModel.SetCubeMetallic(metallic);
-    				}
-
-    				// Slider for subsurface
-    				float currentSubsurface = myScene.m_cubeModel.GetCubeSubsurface();
-    				if (ImGui::SliderFloat("Subsurface", &currentSubsurface, 0.0f, 1.0f))
-    				{
-    					myScene.m_cubeModel.SetCubeSubsurface(currentSubsurface);
-    				}
-
-    				//roughness
-    				float roughness = myScene.m_cubeModel.GetCubeRoughness();
-    				if (ImGui::SliderFloat("Cube Roughness", &roughness, 0.0f, 1.0f))
-    				{
-    					myScene.m_cubeModel.SetCubeRoughness(roughness);
-    				}
-
-    				// slider for specular
-    				float currentSpecular = myScene.m_cubeModel.GetCubeSpecular();
-    				if (ImGui::SliderFloat("Specular", &currentSpecular, 0.0f, 1.0f))
-    				{
-    					myScene.m_cubeModel.SetCubeSpecular(currentSpecular);
-    				}
-
-    				// slider for specular tint
-    				float currentSpecularTint = myScene.m_cubeModel.GetCubeSpecularTint();
-    				if (ImGui::SliderFloat("Specular Tint", &currentSpecularTint, 0.0f, 1.0f))
-    				{
-    					myScene.m_cubeModel.SetCubeSpecularTint(currentSpecularTint);
-    				}
-
-    				// slider for anisotropic
-    				float currentAnisotropic = myScene.m_cubeModel.GetCubeAnisotropic();
-    				if (ImGui::SliderFloat("Anisotropic", &currentAnisotropic, 0.0f, 1.0f))
-    				{
-    					myScene.m_cubeModel.SetCubeAnisotropic(currentAnisotropic);
-    				}
-
-    				// Slider for sheen
-    				float currentSheen = myScene.m_cubeModel.GetCubeSheen();
-    				if (ImGui::SliderFloat("Sheen", &currentSheen, 0.0f, 1.0f))
-    				{
-    					myScene.m_cubeModel.SetCubeSheen(currentSheen);
-    				}
-
-    				// Slider for sheen tint
-    				float currentSheenTint = myScene.m_cubeModel.GetCubeSheenTint();
-    				if (ImGui::SliderFloat("Sheen Tint", &currentSheenTint, 0.0f, 1.0f))
-    				{
-						myScene.m_cubeModel.SetCubeSheenTint(currentSheenTint);
-					}
-
-					// slider for clearcoat
-					float currentClearcoat = myScene.m_cubeModel.GetCubeClearcoat();
-					if (ImGui::SliderFloat("Clearcoat", &currentClearcoat, 0.0f, 1.0f))
-					{
-						myScene.m_cubeModel.SetCubeClearcoat(currentClearcoat);
-					}
-
-    				// slider for clearcoat gloss
-    				float currentClearcoatGloss = myScene.m_cubeModel.GetCubeClearcoatGloss();
-    				if (ImGui::SliderFloat("Clearcoat Gloss", &currentClearcoatGloss, 0.0f, 1.0f))
-    				{
-    					myScene.m_cubeModel.SetCubeClearcoatGloss(currentClearcoatGloss);
-    				}
-
-    				// Colour editor for the specular colour
-    				glm::vec3 currentCubeSpecularCol = myScene.m_cubeModel.GetLightColour();
-    				if (ImGui::ColorEdit3("Light Colour", &(currentCubeSpecularCol[0])))
-					{
-						myScene.m_cubeModel.SetLightColour(currentCubeSpecularCol);
-					}
+    				myScene.m_cubeModel.SetCubeColour(currentAlbedo);
     			}
+
+    			//metallic
+    			bool metallic = myScene.m_cubeModel.GetCubeMetallic();
+    			if (ImGui::Checkbox("Is Cube Metallic?", &metallic))
+    			{
+    				myScene.m_cubeModel.SetCubeMetallic(metallic);
+    			}
+
+    			// Slider for subsurface
+    			float currentSubsurface = myScene.m_cubeModel.GetCubeSubsurface();
+    			if (ImGui::SliderFloat("Subsurface", &currentSubsurface, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeSubsurface(currentSubsurface);
+    			}
+
+    			//roughness
+    			float roughness = myScene.m_cubeModel.GetCubeRoughness();
+    			if (ImGui::SliderFloat("Cube Roughness", &roughness, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeRoughness(roughness);
+    			}
+
+    			// slider for specular
+    			float currentSpecular = myScene.m_cubeModel.GetCubeSpecular();
+    			if (ImGui::SliderFloat("Specular", &currentSpecular, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeSpecular(currentSpecular);
+    			}
+
+    			// slider for specular tint
+    			float currentSpecularTint = myScene.m_cubeModel.GetCubeSpecularTint();
+    			if (ImGui::SliderFloat("Specular Tint", &currentSpecularTint, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeSpecularTint(currentSpecularTint);
+    			}
+
+    			// slider for anisotropic
+    			float currentAnisotropic = myScene.m_cubeModel.GetCubeAnisotropic();
+    			if (ImGui::SliderFloat("Anisotropic", &currentAnisotropic, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeAnisotropic(currentAnisotropic);
+    			}
+    			
+    			// Slider for sheen
+    			float currentSheen = myScene.m_cubeModel.GetCubeSheen();
+    			if (ImGui::SliderFloat("Sheen", &currentSheen, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeSheen(currentSheen);
+    			}
+
+    			// Slider for sheen tint
+    			float currentSheenTint = myScene.m_cubeModel.GetCubeSheenTint();
+    			if (ImGui::SliderFloat("Sheen Tint", &currentSheenTint, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeSheenTint(currentSheenTint);
+    			}
+
+    			// slider for clearcoat
+    			float currentClearcoat = myScene.m_cubeModel.GetCubeClearcoat();
+    			if (ImGui::SliderFloat("Clearcoat", &currentClearcoat, 0.0f, 1.0f))
+				{
+    				myScene.m_cubeModel.SetCubeClearcoat(currentClearcoat);
+				}
+
+    			// slider for clearcoat gloss
+    			float currentClearcoatGloss = myScene.m_cubeModel.GetCubeClearcoatGloss();
+    			if (ImGui::SliderFloat("Clearcoat Gloss", &currentClearcoatGloss, 0.0f, 1.0f))
+    			{
+    				myScene.m_cubeModel.SetCubeClearcoatGloss(currentClearcoatGloss);
+    			}
+
+    			// Colour editor for the specular colour
+    			glm::vec3 currentCubeSpecularCol = myScene.m_cubeModel.GetLightColour();
+    			if (ImGui::ColorEdit3("Light Colour", &(currentCubeSpecularCol[0])))
+    			{
+    				myScene.m_cubeModel.SetLightColour(currentCubeSpecularCol);
+    			}
+
+    			ImGui::Spacing();
+    			ImGui::Spacing();
+    			ImGui::Text("Disney Exclusive Cube Presets");
+    			if (ImGui::Button("Shiny Rubber Cube"))
+				{
+					myScene.DisneyRubberCube();
+				}
+			    if (ImGui::Button("Glass Cube"))
+			    {
+				    myScene.DisneyGlassCube();
+			    }
+    			if (ImGui::Button("Polished Copper Cube"))
+				{
+					myScene.DisneyCopperCube();
+				}
 			}
     	
 			ImGui::End();

@@ -31,6 +31,10 @@ public:
 
 	void SetBrushedMetalCube();
 	void SetPlasticCube();
+	void SetVelvetFabricCube();
+	void DisneyRubberCube();
+	void DisneyGlassCube();
+	void DisneyCopperCube();
 
 protected:
 	void DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour,float a_cubeShininess);

@@ -173,8 +173,8 @@ Cube::Cube()
 	m_specular = 0.5f;
 	m_specularTint = 0.0f;
 	m_anisotropic = 0.0f;
-	m_clearcoat = 0.0f;
-	m_clearcoatGloss = 0.0f;
+	m_clearCoat = 0.0f;
+	m_clearCoatGloss = 0.0f;
 	
 }
 

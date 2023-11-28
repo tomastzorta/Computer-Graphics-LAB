@@ -1,6 +1,6 @@
 ﻿#version 430 core
 
-out vec4 FragColor;
+out vec4 FragColour;
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
@@ -140,18 +140,18 @@ void main()
     vec3 X = calculateTangent(N);
     vec3 Y = cross(N, X);
 
-    vec3 color = BRDF(normalize(lightPosition - WorldPos), V, N, X, Y);
+    vec3 colour = BRDF(normalize(lightPosition - WorldPos), V, N, X, Y);
 
     // Light intensity calculation (assuming a simple point light model)
     float distance = length(lightPosition - WorldPos);
     float attenuation = 1.0 / (distance * distance);
     vec3 radiance = lightColour * attenuation;
 
-    color *= radiance * max(dot(N, normalize(lightPosition - WorldPos)), 0.0);
+    colour *= radiance * max(dot(N, normalize(lightPosition - WorldPos)), 0.0);
 
     // HDR tonemapping and Gamma correction (basic)
-    color = color / (color + vec3(1.0));
-    color = pow(color, vec3(1.0/2.2));
+    colour = colour / (colour + vec3(1.0));
+    colour = pow(colour, vec3(1.0/2.2));
 
-    FragColor = vec4(emissiveColour + color, 1.0);
+    FragColour = vec4(emissiveColour + colour, 1.0);
 }

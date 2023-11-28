@@ -9,7 +9,7 @@
 
 Scene::Scene()
 {
-	m_currentShader = "Disney";
+	m_currentShader = "Phong";
 
 	m_shaderManager.LoadShader("PBR", "Shaders/PBR/PBR_vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
 	m_shaderManager.LoadShader("Phong", "Shaders/Phong/vertShader.vert", "Shaders/Phong/fragShader.frag");
@@ -54,20 +54,20 @@ void Scene::Draw()
 	else if (m_currentShader == "Disney")
 	{
 		/* Draw Cube 1 Disney - Metallic Cube */
-		DrawCubeDisney(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+		DrawCubeDisney(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
 
 		/* Draw Cube 2 Disney - Light Source */
 		DrawCubeDisney(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
 		/* Draw Cube 3 Disney - Wooden Floor */
-		DrawCubeDisney(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.4f, 0.2f, 0.1f), false, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		DrawCubeDisney(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.2f, 0.1f), false, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 	}
 	
     glUseProgram(0);
 }
 
 void Scene::DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour,
-	float a_cubeShininess)
+	float a_cubeShininess )
 {
 	// Set uniforms
 	m_shaderManager.SetUniform("Phong", "modelMat", a_modelMatrix);
@@ -76,11 +76,10 @@ void Scene::DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour,
 	m_shaderManager.SetUniform("Phong", "emissiveColour", a_emissiveColour);
 	m_shaderManager.SetUniform("Phong", "specularColour", m_cubeModel.GetLightColour());
 	m_shaderManager.SetUniform("Phong", "worldSpaceLightPos", m_animationManager.GetModelMatrixCube2() * glm::vec4(0, 0, 0, 1));
+	m_shaderManager.SetUniform("Phong", "ambientColour", m_cubeModel.GetCubeAmbientColour());
 
 	m_cubeModel.Draw();
 }
-
-
 
 void Scene::DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_albedo, bool a_metallic,float a_roughness)
 {
@@ -91,6 +90,7 @@ void Scene::DrawCubePBR(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, g
 	m_shaderManager.SetUniform("PBR", "emissiveColour", a_emissiveColour);
 	m_shaderManager.SetUniform("PBR", "lightPosition", glm::vec3(m_animationManager.GetModelMatrixCube2() * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)));
 	m_shaderManager.SetUniform("PBR", "lightColour", m_cubeModel.GetLightColour());
+	m_shaderManager.SetUniform("PBR", "ao", m_cubeModel.GetCubeAO());
 
 	m_cubeModel.Draw();
 }
@@ -121,27 +121,30 @@ void Scene::SetBrushedMetalCube()
 	if (m_currentShader == "PBR")
 	{
 		m_cubeModel.SetCubeColour(glm::vec3(0.8f, 0.8f, 0.8f));
-		m_cubeModel.SetCubeMetallic(1.0f); // High
-		m_cubeModel.SetCubeRoughness(0.5f); // Moderate to high
+		m_cubeModel.SetCubeAO(1.0f);
+		m_cubeModel.SetCubeMetallic(true); // High
+		m_cubeModel.SetCubeRoughness(0.1f); // Moderate to high
 	}
 	else if (m_currentShader == "Phong")
 	{
+		m_cubeModel.SetCubeAmbientColour(glm::vec3(0.2f, 0.2f, 0.2f));
 		m_cubeModel.SetCubeColour(glm::vec3(0.8f, 0.8f, 0.8f));
-		m_cubeModel.SetCubeShininess(80.0f);
+		m_cubeModel.SetCubeSpecularColour(glm::vec3(1.0f, 1.0f, 1.0f));
+		m_cubeModel.SetCubeShininess(100.0f);
 	}
 	else if (m_currentShader == "Disney")
 	{
 		m_cubeModel.SetCubeColour(glm::vec3(0.8f, 0.8f, 0.8f)); // Grey or silver color
-		m_cubeModel.SetCubeMetallic(1.0f); // High
+		m_cubeModel.SetCubeMetallic(true); // High
 		m_cubeModel.SetCubeSubsurface(0.0f); // Low
-		m_cubeModel.SetCubeSpecular(0.5f); // Moderate
-		m_cubeModel.SetCubeRoughness(0.3f); // Moderate to high
-		m_cubeModel.SetCubeSpecularTint(0.2f); // Low
-		m_cubeModel.SetCubeAnisotropic(0.9f); // High
-		m_cubeModel.SetCubeSheen(0.1f); // Low
-		m_cubeModel.SetCubeSheenTint(0.1f); // Low
-		m_cubeModel.SetCubeClearcoat(0.1f); // Low
-		m_cubeModel.SetCubeClearcoatGloss(0.5f); // Moderate
+		m_cubeModel.SetCubeRoughness(0.1f); // Moderate to high
+		m_cubeModel.SetCubeSpecular(1.0f); // High
+		m_cubeModel.SetCubeSpecularTint(0.0f); // Low
+		m_cubeModel.SetCubeAnisotropic(1.0f); // High
+		m_cubeModel.SetCubeSheen(0.0f); // Low
+		m_cubeModel.SetCubeSheenTint(0.0f); // Low
+		m_cubeModel.SetCubeClearcoat(1.0f); // can also be 0.0
+		m_cubeModel.SetCubeClearcoatGloss(1.0f); // can also be 0.0
 	}
 }
 
@@ -149,26 +152,109 @@ void Scene::SetPlasticCube()
 {
 	if (m_currentShader == "PBR")
 	{
-		
+		m_cubeModel.SetCubeColour(glm::vec3(1.0f, 0.0f, 0.0f));
+		m_cubeModel.SetCubeMetallic(false); // High
+		m_cubeModel.SetCubeAO(1.0f);
+		m_cubeModel.SetCubeRoughness(0.5f); // Moderate to high
 	}
 	else if (m_currentShader == "Phong")
 	{
-		
+		m_cubeModel.SetCubeAmbientColour(glm::vec3(0.1f, 0.1f, 0.1f));
+		m_cubeModel.SetCubeColour(glm::vec3(1.0f, 0.0f, 0.0f));
+		m_cubeModel.SetCubeSpecularColour(glm::vec3(0.5f, 0.5f, 0.5f));
+		m_cubeModel.SetCubeShininess(30.0f);
 	}
 	else if (m_currentShader == "Disney")
 	{
-		m_cubeModel.SetCubeColour(glm::vec3(0.9f, 0.9f, 0.9f)); // Grey or silver color
-		m_cubeModel.SetCubeMetallic(0.0f); // High
-		m_cubeModel.SetCubeSubsurface(0.2f); // Low
+		m_cubeModel.SetCubeColour(glm::vec3(1.0f, 0.0f, 0.0f)); // Grey or silver color
+		m_cubeModel.SetCubeMetallic(false); // Non Metallic
+		m_cubeModel.SetCubeSubsurface(0.0f); // Low
 		m_cubeModel.SetCubeSpecular(0.5f); // Moderate
-		m_cubeModel.SetCubeRoughness(0.4f); // Moderate to high
+		m_cubeModel.SetCubeRoughness(0.5f); // Moderate to high
 		m_cubeModel.SetCubeSpecularTint(0.1f); // Low
 		m_cubeModel.SetCubeAnisotropic(0.0f); // High
-		m_cubeModel.SetCubeSheen(0.0f); // Low
+		m_cubeModel.SetCubeSheen(0.2f); // Low
 		m_cubeModel.SetCubeSheenTint(0.0f); // Low
-		m_cubeModel.SetCubeClearcoat(1.0f); // high
-		m_cubeModel.SetCubeClearcoatGloss(1.0f); // high
+		m_cubeModel.SetCubeClearcoat(0.0f); // high
+		m_cubeModel.SetCubeClearcoatGloss(0.0f); // high
 	}
+}
+
+void Scene::SetVelvetFabricCube()
+{
+	if (m_currentShader == "PBR")
+	{
+		m_cubeModel.SetCubeColour(glm::vec3(0.7f, 0.2f, 0.3f));
+		m_cubeModel.SetCubeMetallic(false); // High
+		m_cubeModel.SetCubeAO(0.8f);
+		m_cubeModel.SetCubeRoughness(0.8f); // Moderate to high
+	}
+	else if (m_currentShader == "Phong")
+	{
+		m_cubeModel.SetCubeAmbientColour(glm::vec3(0.05f, 0.05f, 0.1f));
+		m_cubeModel.SetCubeColour(glm::vec3(0.7f, 0.2f, 0.3f));
+		m_cubeModel.SetCubeSpecularColour(glm::vec3(0.1f, 0.1f, 0.1f));
+		m_cubeModel.SetCubeShininess(5.0f);
+	}
+	else if (m_currentShader == "Disney")
+	{
+		m_cubeModel.SetCubeColour(glm::vec3(0.7f, 0.2f, 0.3f)); // Red
+		m_cubeModel.SetCubeMetallic(false); // Not Metallic
+		m_cubeModel.SetCubeSubsurface(0.4f); //moderate
+		m_cubeModel.SetCubeSpecular(0.2f); // low
+		m_cubeModel.SetCubeRoughness(1.0f); //high
+		m_cubeModel.SetCubeSpecularTint(0.1f); // moderate
+		m_cubeModel.SetCubeAnisotropic(0.0f); // low
+		m_cubeModel.SetCubeSheen(1.0f); // Low
+		m_cubeModel.SetCubeSheenTint(1.0f); // Low
+		m_cubeModel.SetCubeClearcoat(0.0f); // low
+		m_cubeModel.SetCubeClearcoatGloss(0.0f); // low
+	}
+}
+
+void Scene::DisneyRubberCube()
+{
+	m_cubeModel.SetCubeColour(glm::vec3(0.05f, 0.05f, 0.05f));
+	m_cubeModel.SetCubeMetallic(false);
+	m_cubeModel.SetCubeSubsurface(0.0f); 
+	m_cubeModel.SetCubeRoughness(0.7f); 
+	m_cubeModel.SetCubeSpecular(0.5f); 
+	m_cubeModel.SetCubeSpecularTint(0.0f); 
+	m_cubeModel.SetCubeAnisotropic(0.0f); 
+	m_cubeModel.SetCubeSheen(0.0f); 
+	m_cubeModel.SetCubeSheenTint(0.0f); 
+	m_cubeModel.SetCubeClearcoat(0.0f);
+	m_cubeModel.SetCubeClearcoatGloss(0.0f);
+}
+
+void Scene::DisneyGlassCube()
+{
+	m_cubeModel.SetCubeColour(glm::vec3(0.7f, 0.9f, 1.0f)); //Light Blue Glass
+	m_cubeModel.SetCubeMetallic(false); // Low
+	m_cubeModel.SetCubeSubsurface(0.2f); // Low
+	m_cubeModel.SetCubeRoughness(0.1f); // Moderate to high
+	m_cubeModel.SetCubeSpecular(1.0f); // High
+	m_cubeModel.SetCubeSpecularTint(0.2f); // Low
+	m_cubeModel.SetCubeAnisotropic(0.0f); // High
+	m_cubeModel.SetCubeSheen(0.0f); // Low
+	m_cubeModel.SetCubeSheenTint(0.0f); // Low
+	m_cubeModel.SetCubeClearcoat(1.0f); // can also be 0.0
+	m_cubeModel.SetCubeClearcoatGloss(1.0f); // can also be 0.0
+}
+
+void Scene::DisneyCopperCube()
+{
+	m_cubeModel.SetCubeColour(glm::vec3(0.6f, 0.1f, 0.1f)); //Polished Copper
+	m_cubeModel.SetCubeMetallic(true); // Low
+	m_cubeModel.SetCubeSubsurface(0.0f); // Low
+	m_cubeModel.SetCubeRoughness(0.4f); // Moderate to high
+	m_cubeModel.SetCubeSpecular(1.0f); // High
+	m_cubeModel.SetCubeSpecularTint(0.8f); // Low
+	m_cubeModel.SetCubeAnisotropic(0.2f); // High
+	m_cubeModel.SetCubeSheen(0.0f); // Low
+	m_cubeModel.SetCubeSheenTint(0.0f); // Low
+	m_cubeModel.SetCubeClearcoat(0.3f); // can also be 0.0
+	m_cubeModel.SetCubeClearcoatGloss(1.0f); // can also be 0.0
 }
 
 
