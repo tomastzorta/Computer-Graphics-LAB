@@ -1,6 +1,8 @@
 
 #include "Cube.h"
 
+#include <GLM/detail/type_vec4.hpp>
+
 Cube::Cube()
 {
 		// Variable for storing our VAO
@@ -160,7 +162,7 @@ Cube::Cube()
 	glDisableVertexAttribArray(0);
 
 	//Cube Specific Properties
-	m_cubeColour = glm::vec3(1.0f, 0.0f, 0.0f);
+	m_cubeColour = glm::vec4(1.0f, 0.0f, 0.0f, 0.5f);
 	m_lightColour = glm::vec3(1.0f, 1.0f, 1.0f);
 	m_cubeShininess = 20.0f;
 	m_roughness = 0.5f;

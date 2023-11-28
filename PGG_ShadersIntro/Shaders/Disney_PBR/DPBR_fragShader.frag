@@ -19,9 +19,9 @@ uniform float specularTint;
 uniform float anisotropic;
 uniform float sheen;
 uniform float sheenTint;
-uniform float clearcoat;
-uniform float clearcoatGloss;
-uniform float emissiveColour;
+uniform float clearCoat;
+uniform float clearCoatGloss;
+uniform vec3 emissiveColour = {0,0,0};
 
 const float PI = 3.14159265358979323846;
 
@@ -116,13 +116,13 @@ vec3 BRDF( vec3 L, vec3 V, vec3 N, vec3 X, vec3 Y )
     vec3 Fsheen = FH * sheen * Csheen;
 
     // clearcoat (ior = 1.5 -> F0 = 0.04)
-    float Dr = GTR1(NdotH, mix(.1,.001,clearcoatGloss));
+    float Dr = GTR1(NdotH, mix(.1,.001,clearCoatGloss));
     float Fr = mix(.04, 1.0, FH);
     float Gr = smithG_GGX(NdotL, .25) * smithG_GGX(NdotV, .25);
 
     return ((1/PI) * mix(Fd, ss, subsurface)*Cdlin + Fsheen)
     * (1-metallic)
-    + Gs*Fs*Ds + .25*clearcoat*Gr*Fr*Dr;
+    + Gs*Fs*Ds + .25*clearCoat*Gr*Fr*Dr;
 }
 
 vec3 calculateTangent(vec3 N)
@@ -153,5 +153,5 @@ void main()
     color = color / (color + vec3(1.0));
     color = pow(color, vec3(1.0/2.2));
 
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(emissiveColour + color, 1.0);
 }
