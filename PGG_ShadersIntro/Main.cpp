@@ -137,13 +137,13 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 
 			ImGui::Begin("Lighting Models");
 			// Shader Control Buttons
+    		if (ImGui::Button("Use Phong Lighting"))
+    		{
+    			myScene.SetCurrentShader("Phong");
+    		}
 			if (ImGui::Button("Use Cook-Torrance PBR"))
 			{
 				myScene.SetCurrentShader("PBR");
-			}
-			if (ImGui::Button("Use Phong Lighting"))
-			{
-				myScene.SetCurrentShader("Phong");
 			}
     		if (ImGui::Button("Use Disney PBR"))
     		{
@@ -152,9 +152,9 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 			ImGui::End();
 
     		ImGui::Begin("Cube Presets (Across All 3 Shaders)");
-    		if (ImGui::Button("Brushed Metal Cube"))
+    		if (ImGui::Button("Metal Cube"))
     		{
-    			myScene.SetBrushedMetalCube();
+    			myScene.SetMetalCube();
     		}
     		if (ImGui::Button("Plastic Cube"))
     		{
@@ -307,14 +307,10 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
     			ImGui::Spacing();
     			ImGui::Spacing();
     			ImGui::Text("Disney Exclusive Cube Presets");
-    			if (ImGui::Button("Shiny Rubber Cube"))
+    			if (ImGui::Button("Brushed Metal Cube"))
 				{
-					myScene.DisneyRubberCube();
+					myScene.DisneyBrushedCube();
 				}
-			    if (ImGui::Button("Glass Cube"))
-			    {
-				    myScene.DisneyGlassCube();
-			    }
     			if (ImGui::Button("Polished Copper Cube"))
 				{
 					myScene.DisneyCopperCube();
@@ -326,6 +322,10 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 			ImGui::Begin("Statistics");
 			// Showing how to insert text into a string and also get FPS!!
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+    		ImGui::Spacing();
+    		ImGui::Text("Draw Calls Per Frame: %d", myScene.GetDrawCallsPerFrame());
+    		ImGui::Text("Vertices Rendered Per Frame: %d", myScene.GetVerticesRenderedPerFrame());
+    	
 			ImGui::End();
 			
 		}

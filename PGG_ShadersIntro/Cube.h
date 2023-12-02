@@ -57,18 +57,15 @@ public:
 	void SetCubeAmbientColour(glm::vec3 value) { m_cubeAmbientColour = value; }
 	glm::vec3 GetCubeAmbientColour() const { return m_cubeAmbientColour; }
 
-	void SetCubeAO(float value) { m_ao = value; }
-	float GetCubeAO() const { return m_ao; }
-
 	void SetCubeSpecularColour(glm::vec3 value) { m_specularColour = value; }
 	glm::vec3 GetCubeSpecularColour() const { return m_specularColour; }
+
+	int GetNumberOfVertices() const { return _numVertices; }
 
 
 protected:
 	GLuint _VAO;
 	unsigned int _numVertices;
-
-	float m_ao;
 	
 	float m_metallic;
 	float m_subsurface;
@@ -82,8 +79,6 @@ protected:
 	float m_clearCoatGloss;
 	float m_cubeShininess;
 	
-	
-
 	glm::vec3 m_cubeColour;
 	glm::vec3 m_cubeAmbientColour;
 	glm::vec3 m_specularColour;
