@@ -10,8 +10,20 @@
 Scene::Scene() : m_shaderAnalyser(m_shaderManager)
 {
 	m_currentShader = "Phong";
+	m_isAnalyserActive = true;
 
-	m_shaderAnalyser.CompareShaders();
+	if (m_isAnalyserActive)
+	{
+		m_shaderAnalyser.CompareShaders();
+	}
+	else
+	{
+		m_shaderManager.LoadShader("Phong", "Shaders/Phong/vertShader.vert", "Shaders/Phong/fragShader.frag");
+		m_shaderManager.LoadShader("PBR", "Shaders/PBR/PBR_vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
+		m_shaderManager.LoadShader("Disney", "Shaders/PBR/PBR_vertShader.vert", "Shaders/Disney_PBR/DPBR_fragShader.frag");
+	}
+
+	
 }
 
 Scene::~Scene()

@@ -320,12 +320,19 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 			ImGui::End();
 			// Statistic Window
 			ImGui::Begin("Statistics");
-			// Showing how to insert text into a string and also get FPS!!
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-    		ImGui::Spacing();
-    		ImGui::Text("Draw Calls Per Frame: %d", myScene.GetDrawCallsPerFrame());
-    		ImGui::Text("Vertices Rendered Per Frame: %d", myScene.GetVerticesRenderedPerFrame());
-    	
+    		bool currentAnalyserActive = myScene.GetIsAnalyserActive();
+    		if (ImGui::Checkbox("Analyse Shaders", &currentAnalyserActive))
+			{
+				myScene.SetIsAnalyserActive(currentAnalyserActive);
+			}
+			if (currentAnalyserActive)
+			{
+				// Showing how to insert text into a string and also get FPS!!
+				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+				ImGui::Spacing();
+				ImGui::Text("Draw Calls Per Frame: %d", myScene.GetDrawCallsPerFrame());
+				ImGui::Text("Vertices Rendered Per Frame: %d", myScene.GetVerticesRenderedPerFrame());
+			}
 			ImGui::End();
 			
 		}

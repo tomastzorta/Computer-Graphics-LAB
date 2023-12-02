@@ -28,9 +28,12 @@ public:
 	void Update( float deltaTs );
 	void Draw();
 
-	// Shader Functions
+	// Getters/Setters
 	void SetCurrentShader(std::string value) { m_currentShader = value; }
 	std::string GetCurrentShader() const { return m_currentShader; }
+
+	void SetIsAnalyserActive(bool value) { m_isAnalyserActive = value; }
+	bool GetIsAnalyserActive() const { return m_isAnalyserActive; }
 
 	// Class Objects
 	Cube m_cubeModel;
@@ -44,7 +47,6 @@ public:
 	void SetPlasticCube();
 	void SetVelvetFabricCube();
 	void DisneyBrushedCube();
-	void DisneyGlassCube();
 	void DisneyCopperCube();
 
 protected:
@@ -56,6 +58,8 @@ protected:
 private:
 	// current shader
 	std::string m_currentShader;
+	bool m_isAnalyserActive;
+	
 
 	// Frame Data
 	int m_drawCallsPerFrame;
