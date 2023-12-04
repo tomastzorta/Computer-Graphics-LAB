@@ -11,7 +11,7 @@
 Scene::Scene() : m_shaderAnalyser(m_shaderManager)
 {
 	m_currentShader = "Phong";
-	m_isAnalyserActive = true;
+	m_isAnalyserActive = false;
 
 	m_shaderAnalyser.CompareShaders();
 }
@@ -42,10 +42,17 @@ void Scene::Draw()
 	{
 		/* Draw Cube 1 PBR - Standard Object */
 
-		for (int i = 0; i < 10000; i++)
+		if (m_isAnalyserActive)
 		{
-			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
-			DrawCubePBR(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+			for (int i = 0; i < 10000; i++)
+			{
+				glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+				DrawCubePBR(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+			}
+		}
+		else
+		{
+			DrawCubePBR(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
 		}
 
 		m_drawCallsPerFrame++;
@@ -66,10 +73,17 @@ void Scene::Draw()
 	{
 		/* Draw Cube 1 PBR - Standard Object */
 
-		for (int i = 0; i < 10000; i++)
+		if (m_isAnalyserActive)
 		{
-			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
-			DrawCubePhong(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
+			for (int i = 0; i < 10000; i++)
+			{
+				glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+				DrawCubePhong(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
+			}
+		}
+		else
+		{
+			DrawCubePhong(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
 		}
 		
 		m_drawCallsPerFrame++;
@@ -88,11 +102,20 @@ void Scene::Draw()
 	else if (m_currentShader == "Disney")
 	{
 		/* Draw Cube 1 Disney - Metallic Cube */
-		for (int i = 0; i < 10000; i++)
+		
+		if (m_isAnalyserActive)
 		{
-			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
-			DrawCubeDisney(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+			for (int i = 0; i < 10000; i++)
+			{
+				glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+				DrawCubeDisney(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+			}
 		}
+		else
+		{
+			DrawCubeDisney(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+		}
+		
 		m_drawCallsPerFrame++;
 		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
 		
@@ -259,7 +282,7 @@ void Scene::DisneyBrushedCube()
 	m_cubeModel.SetCubeColour(glm::vec3(0.8f, 0.8f, 0.8f)); // Grey or silver color
 	m_cubeModel.SetCubeMetallic(true); // is metallic
 	m_cubeModel.SetCubeSubsurface(0.0f); // Low
-	m_cubeModel.SetCubeRoughness(0.1f); // Moderate to high
+	m_cubeModel.SetCubeRoughness(0.4f); // Moderate to high
 	m_cubeModel.SetCubeSpecular(1.0f); // High
 	m_cubeModel.SetCubeSpecularTint(0.0f); // Low
 	m_cubeModel.SetCubeAnisotropic(1.0f); // High
