@@ -3,6 +3,8 @@
 #define __CUBE_H__
 
 // This is the main SDL include file
+#include <vector>
+#include <GLM/detail/type_mat.hpp>
 #include <GLM/detail/type_vec.hpp>
 #include <GLM/detail/type_vec3.hpp>
 #include "glew.h"

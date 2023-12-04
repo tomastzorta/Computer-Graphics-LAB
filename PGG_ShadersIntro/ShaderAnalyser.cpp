@@ -7,14 +7,15 @@
 
 double ShaderAnalyser::MeasureShaderCompileTime(const std::string& a_shaderType, const std::string& a_vertexPath, const std::string& a_fragmentPath) const
 {
-    auto startTime = std::chrono::high_resolution_clock::now();
+    
+    auto start = std::chrono::high_resolution_clock::now();
 
     m_shaderManager.LoadShader(a_shaderType, a_vertexPath, a_fragmentPath);
 
-    auto endTime = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> duration = endTime - startTime;
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
 
-    return duration.count();
+    return elapsed.count();  // return time in seconds
 }
 
 double ShaderAnalyser::MeasureShaderLinkingTime(const std::string& a_shaderType) const
@@ -52,10 +53,10 @@ void ShaderAnalyser::CompareShaders() const
     double PBRLinkTime = MeasureShaderLinkingTime("PBR");
     size_t PBRMemory = (GetShaderMemoryUsage() - initialMemory - PhongMemory * 1024) / 1024;
 
-    double DisneyTime = MeasureShaderCompileTime("Disney", "Shaders/PBR/PBR_vertShader.vert", "Shaders/Disney_PBR/DPBR_fragShader.frag");
+    double DisneyTime = MeasureShaderCompileTime("Disney", "Shaders/Disney_PBR/DPBR_vertShader.vert", "Shaders/Disney_PBR/DPBR_fragShader.frag");
     double DisneyLinkTime = MeasureShaderLinkingTime("Disney");
     size_t DisneyMemory = (GetShaderMemoryUsage() - initialMemory - PhongMemory * 1024 - PBRMemory * 1024) / 1024;
-
+    
     analysisFile << std::fixed << std::setprecision(6);
     analysisFile << "Shader Compile Times" << std::endl;
     analysisFile << "Phong Shader took " << PhongTime << " seconds to compile" << std::endl;
@@ -71,5 +72,8 @@ void ShaderAnalyser::CompareShaders() const
     analysisFile << "Phong Shader used " << PhongMemory << " kilobytes of memory" << std::endl;
     analysisFile << "PBR Shader used " << PBRMemory << " kilobytes of memory" << std::endl;
     analysisFile << "Disney Shader used " << DisneyMemory << " kilobytes of memory" << std::endl;
+    analysisFile << std::endl;
+    
+    
 }
 

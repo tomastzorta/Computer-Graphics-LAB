@@ -261,6 +261,7 @@
     <ClInclude Include="wglew.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="Shaders\Disney_PBR\DPBR_vertShader.vert" />
     <Text Include="Shaders\PBR\PBR_vertShader.vert" />
     <Text Include="Shaders\Phong\fragShader.frag" />
   </ItemGroup>

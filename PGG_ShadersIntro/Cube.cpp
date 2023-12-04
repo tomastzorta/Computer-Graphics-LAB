@@ -1,6 +1,7 @@
 
 #include "Cube.h"
 
+#include <GLM/detail/type_mat4x4.hpp>
 #include <GLM/detail/type_vec4.hpp>
 
 Cube::Cube()

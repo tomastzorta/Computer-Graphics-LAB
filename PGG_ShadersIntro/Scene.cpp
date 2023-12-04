@@ -5,6 +5,7 @@
 #include "Scene.h"
 
 #include <iostream>
+#include <GLM/gtc/matrix_transform.hpp>
 
 
 Scene::Scene() : m_shaderAnalyser(m_shaderManager)
@@ -12,18 +13,7 @@ Scene::Scene() : m_shaderAnalyser(m_shaderManager)
 	m_currentShader = "Phong";
 	m_isAnalyserActive = true;
 
-	if (m_isAnalyserActive)
-	{
-		m_shaderAnalyser.CompareShaders();
-	}
-	else
-	{
-		m_shaderManager.LoadShader("Phong", "Shaders/Phong/vertShader.vert", "Shaders/Phong/fragShader.frag");
-		m_shaderManager.LoadShader("PBR", "Shaders/PBR/PBR_vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
-		m_shaderManager.LoadShader("Disney", "Shaders/PBR/PBR_vertShader.vert", "Shaders/Disney_PBR/DPBR_fragShader.frag");
-	}
-
-	
+	m_shaderAnalyser.CompareShaders();
 }
 
 Scene::~Scene()
@@ -47,11 +37,17 @@ void Scene::Draw()
 	m_shaderManager.SetUniform(m_currentShader, "viewMat", m_cameraManager.GetViewMatrix());
 	m_shaderManager.SetUniform(m_currentShader, "projMat", m_cameraManager.GetProjMatrix());
 	m_shaderManager.SetUniform(m_currentShader, "camPos", glm::vec3(glm::inverse(m_cameraManager.GetViewMatrix())[3]));
-
+	
 	if (m_currentShader == "PBR")
 	{
 		/* Draw Cube 1 PBR - Standard Object */
-		DrawCubePBR(m_animationManager.GetModelMatrixCube1(),glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+
+		for (int i = 0; i < 10000; i++)
+		{
+			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+			DrawCubePBR(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+		}
+
 		m_drawCallsPerFrame++;
 		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
 		
@@ -64,11 +60,18 @@ void Scene::Draw()
 		DrawCubePBR(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.3f, 0.3f, 1.0f), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness() );
 		m_drawCallsPerFrame++;
 		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
+		
 	}
 	else if (m_currentShader == "Phong")
 	{
 		/* Draw Cube 1 PBR - Standard Object */
-		DrawCubePhong(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
+
+		for (int i = 0; i < 10000; i++)
+		{
+			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+			DrawCubePhong(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
+		}
+		
 		m_drawCallsPerFrame++;
 		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
 		
@@ -85,7 +88,11 @@ void Scene::Draw()
 	else if (m_currentShader == "Disney")
 	{
 		/* Draw Cube 1 Disney - Metallic Cube */
-		DrawCubeDisney(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+		for (int i = 0; i < 10000; i++)
+		{
+			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+			DrawCubeDisney(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+		}
 		m_drawCallsPerFrame++;
 		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
 		
