@@ -92,7 +92,19 @@ void UpdateScene(Scene& myScene, float deltaTs) {
 void RenderScene(Scene& myScene) {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    myScene.Draw();
+    if (myScene.GetCurrentShader() == "Phong")
+    {
+    	myScene.DrawPhong();
+    }
+	else if (myScene.GetCurrentShader() == "PBR")
+    {
+		myScene.DrawPBR();
+    }
+	else if (myScene.GetCurrentShader() == "Disney")
+	{
+		myScene.DrawDisney();
+	}
+    
 }
 
 void RenderGUI(Scene& myScene, bool& showLightingWindow) {
@@ -329,9 +341,6 @@ void RenderGUI(Scene& myScene, bool& showLightingWindow) {
 			{
 				// Showing how to insert text into a string and also get FPS!!
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-				ImGui::Spacing();
-				ImGui::Text("Draw Calls Per Frame: %d", myScene.GetDrawCallsPerFrame());
-				ImGui::Text("Vertices Rendered Per Frame: %d", myScene.GetVerticesRenderedPerFrame());
 			}
 			ImGui::End();
 			

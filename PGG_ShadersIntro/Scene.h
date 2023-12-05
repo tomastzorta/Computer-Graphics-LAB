@@ -20,13 +20,12 @@ public:
 	Scene();
 	~Scene();
 
-	// Getters/Setters
-	int GetDrawCallsPerFrame() const { return m_drawCallsPerFrame; }
-	int GetVerticesRenderedPerFrame() const { return m_verticesRenderedPerFrame; }
-
 	// Functions
 	void Update( float deltaTs );
-	void Draw();
+	void CameraUniforms();
+	void DrawPhong();
+	void DrawPBR();
+	void DrawDisney();
 
 	// Getters/Setters
 	void SetCurrentShader(std::string value) { m_currentShader = value; }
@@ -59,9 +58,4 @@ private:
 	// current shader
 	std::string m_currentShader;
 	bool m_isAnalyserActive;
-	
-
-	// Frame Data
-	int m_drawCallsPerFrame;
-	int m_verticesRenderedPerFrame;
 };

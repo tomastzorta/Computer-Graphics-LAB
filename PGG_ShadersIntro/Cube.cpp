@@ -146,11 +146,7 @@ Cube::Cube()
 	// This tells OpenGL how we link the vertex data to the shader
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0 );
 	glEnableVertexAttribArray(1);
-
-
-
-
-
+	
 	// Unbind for neatness, it just makes life easier
 	// As a general tip, especially as you're still learning, for each function that needs to do something specific try to return OpenGL in the state you found it in
 	// This means you will need to set the states at the beginning of your function and set them back at the end

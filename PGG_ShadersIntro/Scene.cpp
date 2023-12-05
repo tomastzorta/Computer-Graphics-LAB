@@ -26,115 +26,98 @@ void Scene::Update( float deltaTs )
 	m_animationManager.Update(deltaTs);
 }
 
-void Scene::Draw()
+void Scene::CameraUniforms()
 {
-	// Reset counters for each frame
-	m_drawCallsPerFrame = 0;
-	m_verticesRenderedPerFrame = 0;
-
 	// Camera and Projection Matrices
 	m_shaderManager.UseShader(m_currentShader);
 	m_shaderManager.SetUniform(m_currentShader, "viewMat", m_cameraManager.GetViewMatrix());
 	m_shaderManager.SetUniform(m_currentShader, "projMat", m_cameraManager.GetProjMatrix());
 	m_shaderManager.SetUniform(m_currentShader, "camPos", glm::vec3(glm::inverse(m_cameraManager.GetViewMatrix())[3]));
+}
+
+void Scene::DrawPhong()
+{
+
+	CameraUniforms();
 	
-	if (m_currentShader == "PBR")
+	if (m_isAnalyserActive)
+	{
+		for (int i = 0; i < 10000; i++)
+		{
+			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+			DrawCubePhong(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
+		}
+	}
+	else
 	{
 		/* Draw Cube 1 PBR - Standard Object */
-
-		if (m_isAnalyserActive)
-		{
-			for (int i = 0; i < 10000; i++)
-			{
-				glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
-				DrawCubePBR(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
-			}
-		}
-		else
-		{
-			DrawCubePBR(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
-		}
-
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-		
-		/* Draw Cube 2 PBR - Light Source */
-		DrawCubePBR(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), false, 0.1f );
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-		
-		/* Draw Cube 3 PBR - Floor */
-		DrawCubePBR(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.3f, 0.3f, 1.0f), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness() );
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-		
+		DrawCubePhong(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
 	}
-	else if (m_currentShader == "Phong")
-	{
-		/* Draw Cube 1 PBR - Standard Object */
-
-		if (m_isAnalyserActive)
-		{
-			for (int i = 0; i < 10000; i++)
-			{
-				glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
-				DrawCubePhong(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
-			}
-		}
-		else
-		{
-			DrawCubePhong(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
-		}
 		
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
+	/* Draw Cube 2 PBR - Light Source */
+	DrawCubePhong(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f,1.0f,1.0f), m_cubeModel.GetCubeShininess());
 		
-		/* Draw Cube 2 PBR - Light Source */
-		DrawCubePhong(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f,1.0f,1.0f), m_cubeModel.GetCubeShininess());
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-		
-		/* Draw Cube 3 PBR - Floor */
-		DrawCubePhong(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.3f, 0.3f, 1.0f), m_cubeModel.GetCubeShininess());
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-	}
-	else if (m_currentShader == "Disney")
-	{
-		/* Draw Cube 1 Disney - Metallic Cube */
-		
-		if (m_isAnalyserActive)
-		{
-			for (int i = 0; i < 10000; i++)
-			{
-				glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
-				DrawCubeDisney(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
-			}
-		}
-		else
-		{
-			DrawCubeDisney(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
-		}
-		
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-		
-		/* Draw Cube 2 Disney - Light Source */
-		DrawCubeDisney(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-		
-		/* Draw Cube 3 Disney - Wooden Floor */
-		DrawCubeDisney(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.2f, 0.1f), false, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-		m_drawCallsPerFrame++;
-		m_verticesRenderedPerFrame += m_cubeModel.GetNumberOfVertices();
-	}
+	/* Draw Cube 3 PBR - Floor */
+	DrawCubePhong(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.3f, 0.3f, 1.0f), m_cubeModel.GetCubeShininess());
 	
     glUseProgram(0);
 }
 
-void Scene::DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour,
-	float a_cubeShininess )
+void Scene::DrawPBR()
+{
+	CameraUniforms();
+	
+	if (m_isAnalyserActive)
+	{
+		for (int i = 0; i < 10000; i++)
+		{
+			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(),glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f));
+			DrawCubePBR(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(),m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+		}
+	}
+	else
+	{
+		/* Draw Cube 1 PBR - Standard Object */
+		DrawCubePBR(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f),m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+	}
+
+	/* Draw Cube 2 PBR - Light Source */
+	DrawCubePBR(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f),false, 0.1f);
+
+	/* Draw Cube 3 PBR - Floor */
+	DrawCubePBR(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.3f, 0.3f, 1.0f),m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeRoughness());
+
+	glUseProgram(0);
+}
+
+void Scene::DrawDisney()
+{
+	CameraUniforms();
+	
+	if (m_isAnalyserActive)
+	{
+		for (int i = 0; i < 10000; i++)
+		{
+			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
+			DrawCubeDisney(modelMatrix, glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+		}
+	}
+	else
+	{
+		/* Draw Cube 1 Disney - Metallic Cube */
+		DrawCubeDisney(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.05f, 0.05f, 0.05f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeMetallic(), m_cubeModel.GetCubeSubsurface(), m_cubeModel.GetCubeRoughness(), 0.8f, m_cubeModel.GetCubeSpecularTint(), m_cubeModel.GetCubeAnisotropic(), m_cubeModel.GetCubeSheen(), m_cubeModel.GetCubeSheenTint(), m_cubeModel.GetCubeClearcoat(), m_cubeModel.GetCubeClearcoatGloss());
+	}
+		
+	/* Draw Cube 2 Disney - Light Source */
+	DrawCubeDisney(m_animationManager.GetModelMatrixCube2(), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(1.0f, 1.0f, 1.0f), false, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		
+	/* Draw Cube 3 Disney - Wooden Floor */
+	DrawCubeDisney(m_animationManager.GetModelMatrixCube3(), glm::vec3(0.05f, 0.05f, 0.05f), glm::vec3(0.4f, 0.2f, 0.1f), false, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+	glUseProgram(0);
+}
+
+void Scene::DrawCubePhong(glm::mat4& a_modelMatrix, glm::vec3& a_emissiveColour, glm::vec3& a_diffuseColour,float a_cubeShininess )
 {
 	// Set uniforms to function parameters
 	m_shaderManager.SetUniform("Phong", "modelMat", a_modelMatrix);
@@ -291,6 +274,7 @@ void Scene::DisneyBrushedCube()
 	m_cubeModel.SetCubeClearcoat(1.0f); // can also be 0.0
 	m_cubeModel.SetCubeClearcoatGloss(1.0f); // can also be 0.0
 }
+
 void Scene::DisneyCopperCube()
 {
 	m_cubeModel.SetCubeColour(glm::vec3(0.95f, 0.64f, 0.54f)); //Polished Copper

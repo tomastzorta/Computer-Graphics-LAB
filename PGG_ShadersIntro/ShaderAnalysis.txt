@@ -1,15 +1,15 @@
 Shader Compile Times
-Phong Shader took 0.007457 seconds to compile
-PBR Shader took 0.004894 seconds to compile
-Disney Shader took 0.004810 seconds to compile
+Phong Shader took 0.003876 seconds to compile
+PBR Shader took 0.000530 seconds to compile
+Disney Shader took 0.000706 seconds to compile
 
 Shader Linking Times
-Phong Shader took 0.000005 seconds to link
+Phong Shader took 0.000006 seconds to link
 PBR Shader took 0.000001 seconds to link
 Disney Shader took 0.000001 seconds to link
 
 Memory Usage
-Phong Shader used 160 kilobytes of memory
-PBR Shader used 76 kilobytes of memory
-Disney Shader used 136 kilobytes of memory
+Phong Shader used 288 kilobytes of memory
+PBR Shader used 88 kilobytes of memory
+Disney Shader used 140 kilobytes of memory
 
