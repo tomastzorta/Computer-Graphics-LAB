@@ -6,14 +6,25 @@
 
 #include <iostream>
 #include <GLM/gtc/matrix_transform.hpp>
+#include "nvtx3/nvtx3.hpp"
 
 
 Scene::Scene() : m_shaderAnalyser(m_shaderManager)
 {
-	m_currentShader = "Phong";
+	m_currentShader = "Disney";
 	m_isAnalyserActive = false;
-
-	m_shaderAnalyser.CompareShaders();
+	
+	ShaderAnalyser::CompareShaders();
+	
+	nvtxRangePushA("Phong Load Shader");
+	m_shaderManager.LoadShader("Phong", "Shaders/Phong/vertShader.vert", "Shaders/Phong/fragShader.frag");
+	nvtxRangePop();
+	nvtxRangePushA("PBR Load Shader");
+	m_shaderManager.LoadShader("PBR", "Shaders/PBR/PBR_vertShader.vert", "Shaders/PBR/PBR_fragShader.frag");
+	nvtxRangePop();
+	nvtxRangePushA("Disney Load Shader");
+	m_shaderManager.LoadShader("Disney", "Shaders/Disney_PBR/DPBR_vertShader.vert", "Shaders/Disney_PBR/DPBR_fragShader.frag");
+	nvtxRangePop();
 }
 
 Scene::~Scene()
@@ -42,11 +53,14 @@ void Scene::DrawPhong()
 	
 	if (m_isAnalyserActive)
 	{
+		nvtxRangePushA("CPU Killer");
 		for (int i = 0; i < 10000; i++)
 		{
+			
 			glm::mat4 modelMatrix = glm::translate(m_animationManager.GetModelMatrixCube1(), glm::vec3(0.0f, 0.0f, -100.0f + i * 0.2f)); // Translate from -100 forward
 			DrawCubePhong(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f), m_cubeModel.GetCubeColour(), m_cubeModel.GetCubeShininess());
 		}
+		nvtxRangePop();
 	}
 	else
 	{

@@ -15,7 +15,6 @@
 class Scene
 {
 public:
-
 	// Constructor/Destructor
 	Scene();
 	~Scene();

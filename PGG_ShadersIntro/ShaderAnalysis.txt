@@ -1,15 +1,8 @@
 Shader Compile Times
-Phong Shader took 0.003876 seconds to compile
-PBR Shader took 0.000530 seconds to compile
-Disney Shader took 0.000706 seconds to compile
-
-Shader Linking Times
-Phong Shader took 0.000006 seconds to link
-PBR Shader took 0.000001 seconds to link
-Disney Shader took 0.000001 seconds to link
-
-Memory Usage
-Phong Shader used 288 kilobytes of memory
-PBR Shader used 88 kilobytes of memory
-Disney Shader used 140 kilobytes of memory
+Phong Vertex Shader took 0.004319 seconds to compile
+Phong Fragment Shader took 0.000129 seconds to compile
+PBR Vertex Shader took 0.000018 seconds to compile
+PBR Fragment Shader took 0.000012 seconds to compile
+Disney Vertex Shader took 0.000007 seconds to compile
+Disney Fragment Shader took 0.000016 seconds to compile
 
