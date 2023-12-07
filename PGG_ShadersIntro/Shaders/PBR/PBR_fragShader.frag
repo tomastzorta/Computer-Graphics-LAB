@@ -1,5 +1,6 @@
-﻿#version 430 core
-out vec4 FragColor;
+﻿//Shader from learnopengl.com (https://learnopengl.com/PBR/Lighting)
+#version 430 core
+out vec4 Fragcolour;
 in vec2 TexCoords;
 in vec3 WorldPos;
 in vec3 Normal;
@@ -13,7 +14,7 @@ uniform float ao;  // Ambient occlusion
 
 // Light properties
 uniform vec3 lightPosition; // Assuming cube 1's position
-uniform vec3 lightColour;    // Assuming cube 1's color
+uniform vec3 lightColour;    // Assuming cube 1's colour
 
 uniform vec3 camPos;  // Camera position
 
@@ -94,12 +95,12 @@ void main()
     Lo += (kD * albedo / PI + specular) * radiance * NdotL;
 
     vec3 ambient = vec3(0.03) * albedo * ao;
-    vec3 color = ambient + Lo;
+    vec3 colour = ambient + Lo;
 
     // HDR tonemapping
-    color = color / (color + vec3(1.0));
+    colour = colour / (colour + vec3(1.0));
     // Gamma correction
-    color = pow(color, vec3(1.0/2.2));
+    colour = pow(colour, vec3(1.0/2.2));
 
-    FragColor = vec4(emissiveColour + color, 1.0);
+    Fragcolour = vec4(emissiveColour + colour, 1.0);
 }

@@ -1,4 +1,5 @@
-﻿#version 430 core
+﻿//Shader from official disney repository (https://github.com/wdas/brdf/blob/main/src/brdfs/disney.brdf)
+#version 430 core
 
 out vec4 FragColour;
 in vec2 TexCoords;

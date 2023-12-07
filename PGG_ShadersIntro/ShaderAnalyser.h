@@ -6,7 +6,7 @@
 class ShaderAnalyser
 {
 public:
-    ShaderAnalyser(ShaderManager& shaderManager) : m_shaderManager(shaderManager)
+    ShaderAnalyser(ShaderManager& a_shaderManager) : m_shaderManager(a_shaderManager)
     {
     }
 

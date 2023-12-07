@@ -11,8 +11,8 @@ public:
     glm::mat4 GetProjMatrix() const { return m_projMatrix; }
     float GetCameraAngleX() const { return m_cameraAngleX; }
     float GetCameraAngleY() const { return m_cameraAngleY; }
-    void SetCameraAngleX(float value) { m_cameraAngleX = value; }
-    void SetCameraAngleY(float value) { m_cameraAngleY = value; }
+    void SetCameraAngleX(const float a_value) { m_cameraAngleX = a_value; }
+    void SetCameraAngleY(const float a_value) { m_cameraAngleY = a_value; }
     
 private:
     glm::mat4 m_viewMatrix, m_projMatrix;

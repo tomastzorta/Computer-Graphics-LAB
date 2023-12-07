@@ -7,22 +7,23 @@
 
 double ShaderAnalyser::MeasureShaderCompileTime(const GLenum a_shaderType, const std::string& a_shaderSource)
 {
-    const auto timerStart = std::chrono::high_resolution_clock::now();
+    const auto timerStart = std::chrono::high_resolution_clock::now(); // start timer
 
-    const GLuint shaderToCompile = ShaderManager::CompileShader(a_shaderSource, a_shaderType);
+    const GLuint shaderToCompile = ShaderManager::CompileShader(a_shaderSource, a_shaderType); // compile shader
 
-    const auto timerEnd = std::chrono::high_resolution_clock::now();
-    const std::chrono::duration<double> timerDuration = timerEnd - timerStart;
+    const auto timerEnd = std::chrono::high_resolution_clock::now(); // end timer
+    const std::chrono::duration<double> timerDuration = timerEnd - timerStart; // calculate duration
 
-    glDeleteShader(shaderToCompile);
+    glDeleteShader(shaderToCompile); // delete shader
 
     return timerDuration.count(); // return time in seconds
 }
 
 void ShaderAnalyser::CompareShaders()
 {
-    std::ofstream analysisFile("ShaderAnalysis.txt");
-    
+    std::ofstream analysisFile("ShaderAnalysis.txt"); // create file
+
+    // read shader files
     std::string phongVertexShaderFile = ShaderManager::ReadShaderFile("Shaders/Phong/vertShader.vert");
     std::string phongFragmentShaderFile = ShaderManager::ReadShaderFile("Shaders/Phong/fragShader.frag");
     std::string pbrVertexShaderFile = ShaderManager::ReadShaderFile("Shaders/PBR/PBR_vertShader.vert");
@@ -30,6 +31,7 @@ void ShaderAnalyser::CompareShaders()
     std::string disneyVertexShaderFile = ShaderManager::ReadShaderFile("Shaders/Disney_PBR/DPBR_vertShader.vert");
     std::string disneyFragmentShaderFile = ShaderManager::ReadShaderFile("Shaders/Disney_PBR/DPBR_fragShader.frag");
 
+    // measure compile times
     double PhongVertexCompileTime = MeasureShaderCompileTime(GL_VERTEX_SHADER, phongVertexShaderFile);
     double PhongFragmentCompileTime = MeasureShaderCompileTime(GL_FRAGMENT_SHADER, phongFragmentShaderFile);
 
@@ -39,6 +41,7 @@ void ShaderAnalyser::CompareShaders()
     double DisneyVertexCompileTime = MeasureShaderCompileTime(GL_VERTEX_SHADER, disneyVertexShaderFile);
     double DisneyFragmentCompileTime = MeasureShaderCompileTime(GL_FRAGMENT_SHADER, disneyFragmentShaderFile);
 
+    // write to file
     analysisFile << std::fixed << std::setprecision(6);
     analysisFile << "Shader Compile Times" << std::endl;
     analysisFile << "Phong Vertex Shader took " << PhongVertexCompileTime << " seconds to compile" << std::endl;

@@ -15,51 +15,51 @@ public:
 	Cube();
 	~Cube();
 
-	void Draw();
+	void Draw() const;
 
-	void SetCubeColour(glm::vec3 value) { m_cubeColour = value; }
+	void SetCubeColour(const glm::vec3& a_value) { m_cubeColour = a_value; }
 	glm::vec3 GetCubeColour() const { return m_cubeColour; }
 
-	void SetLightColour(glm::vec3 value) { m_lightColour = value; }
+	void SetLightColour(const glm::vec3& a_value) { m_lightColour = a_value; }
 	glm::vec3 GetLightColour() const { return m_lightColour; }
 
-	void SetCubeShininess(float value) {m_cubeShininess = value;}
+	void SetCubeShininess(const float a_value) {m_cubeShininess = a_value;}
 	float GetCubeShininess() const { return m_cubeShininess; }
 
-	void SetCubeMetallic(bool value) { m_metallic = value ? 1.0f : 0.0f; }
+	void SetCubeMetallic(const bool a_value) { m_metallic = a_value ? 1.0f : 0.0f; }
 	float GetCubeMetallic() const { return m_metallic;}
 
-	void SetCubeRoughness(float value) { m_roughness = value; }
+	void SetCubeRoughness(const float a_value) { m_roughness = a_value; }
 	float GetCubeRoughness() const { return m_roughness; }
 
-	void SetCubeSheen(float value) { m_sheen = value; }
+	void SetCubeSheen(const float a_value) { m_sheen = a_value; }
 	float GetCubeSheen() const { return m_sheen; }
 
-	void SetCubeSheenTint(float value) { m_sheenTint = value; }
+	void SetCubeSheenTint(const float a_value) { m_sheenTint = a_value; }
 	float GetCubeSheenTint() const { return m_sheenTint; }
 
-	void SetCubeSubsurface(float value) { m_subsurface = value; }
+	void SetCubeSubsurface(const float a_value) { m_subsurface = a_value; }
 	float GetCubeSubsurface() const { return m_subsurface; }
 
-	void SetCubeSpecular(float value) { m_specular = value; }
+	void SetCubeSpecular(const float a_value) { m_specular = a_value; }
 	float GetCubeSpecular() const { return m_specular; }
 
-	void SetCubeSpecularTint(float value) { m_specularTint = value; }
+	void SetCubeSpecularTint(const float a_value) { m_specularTint = a_value; }
 	float GetCubeSpecularTint() const { return m_specularTint; }
 
-	void SetCubeAnisotropic(float value) { m_anisotropic = value; }
+	void SetCubeAnisotropic(const float a_value) { m_anisotropic = a_value; }
 	float GetCubeAnisotropic() const { return m_anisotropic; }
 
-	void SetCubeClearcoat(float value) { m_clearCoat = value; }
-	float GetCubeClearcoat() const { return m_clearCoat; }
+	void SetCubeClearCoat(const float a_value) { m_clearCoat = a_value; }
+	float GetCubeClearCoat() const { return m_clearCoat; }
 
-	void SetCubeClearcoatGloss(float value) { m_clearCoatGloss = value; }
-	float GetCubeClearcoatGloss() const { return m_clearCoatGloss; }
+	void SetCubeClearCoatGloss(const float a_value) { m_clearCoatGloss = a_value; }
+	float GetCubeClearCoatGloss() const { return m_clearCoatGloss; }
 
-	void SetCubeAmbientColour(glm::vec3 value) { m_cubeAmbientColour = value; }
+	void SetCubeAmbientColour(const glm::vec3& a_value) { m_cubeAmbientColour = a_value; }
 	glm::vec3 GetCubeAmbientColour() const { return m_cubeAmbientColour; }
 
-	void SetCubeSpecularColour(glm::vec3 value) { m_specularColour = value; }
+	void SetCubeSpecularColour(const glm::vec3& a_value) { m_specularColour = a_value; }
 	glm::vec3 GetCubeSpecularColour() const { return m_specularColour; }
 
 	int GetNumberOfVertices() const { return _numVertices; }

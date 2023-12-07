@@ -181,7 +181,7 @@ Cube::~Cube()
 	// TODO: delete the VBOs as well!
 }
 
-void Cube::Draw()
+void Cube::Draw() const
 {
 		// Activate the VAO
 		glBindVertexArray( _VAO );

@@ -1,8 +1,8 @@
 Shader Compile Times
-Phong Vertex Shader took 0.004319 seconds to compile
-Phong Fragment Shader took 0.000129 seconds to compile
-PBR Vertex Shader took 0.000018 seconds to compile
-PBR Fragment Shader took 0.000012 seconds to compile
+Phong Vertex Shader took 0.011698 seconds to compile
+Phong Fragment Shader took 0.000175 seconds to compile
+PBR Vertex Shader took 0.000015 seconds to compile
+PBR Fragment Shader took 0.000011 seconds to compile
 Disney Vertex Shader took 0.000007 seconds to compile
-Disney Fragment Shader took 0.000016 seconds to compile
+Disney Fragment Shader took 0.000014 seconds to compile
 

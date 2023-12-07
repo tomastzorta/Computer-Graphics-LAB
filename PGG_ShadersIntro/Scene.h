@@ -20,25 +20,25 @@ public:
 	~Scene();
 
 	// Functions
-	void Update( float deltaTs );
+	void Update( float a_deltaTs );
 	void CameraUniforms();
 	void DrawPhong();
 	void DrawPBR();
 	void DrawDisney();
 
 	// Getters/Setters
-	void SetCurrentShader(std::string value) { m_currentShader = value; }
+	void SetCurrentShader(const std::string& a_value) { m_currentShader = a_value; }
 	std::string GetCurrentShader() const { return m_currentShader; }
 
-	void SetIsAnalyserActive(bool value) { m_isAnalyserActive = value; }
+	void SetIsAnalyserActive(const bool a_value) { m_isAnalyserActive = a_value; }
 	bool GetIsAnalyserActive() const { return m_isAnalyserActive; }
 
 	// Class Objects
-	Cube m_cubeModel;
-	ShaderManager m_shaderManager;
-	AnimationManager m_animationManager;
-	CameraManager m_cameraManager;
-	ShaderAnalyser m_shaderAnalyser;
+	Cube cubeModel;
+	ShaderManager shaderManager;
+	AnimationManager animationManager;
+	CameraManager cameraManager;
+	ShaderAnalyser shaderAnalyser;
 
 	// Preset Cube Functions
 	void SetMetalCube();
